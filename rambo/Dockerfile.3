@@ -1,0 +1,20 @@
+FROM nginx:alpine
+
+LABEL maintainer="mirek <mirek@cnl.sk>"
+LABEL title="Rambo III"
+LABEL year="1988"
+LABEL description="Rambo mounts a one-man mission to rescue his friend Colonel Trautman from the clutches of the formidable invading Soviet forces in Afghanistan."
+LABEL imdb="https://www.imdb.com/title/tt0095956"
+LABEL part="3"
+
+ENV RAMBO_PART=3
+
+
+RUN rm /etc/nginx/conf.d/*
+ADD nginx.conf.template /etc/nginx/conf.d/
+ADD index.3.html /usr/share/nginx/html/index.html
+
+ADD images/rambo.3.jpg usr/share/nginx/html/images/rambo.3.jpg
+ADD css/rambo.3.css usr/share/nginx/html/css/rambo.3.css
+
+CMD [ "/bin/sh" , "-c" , "sed 's/${RAMBO_PART}/'${RAMBO_PART}'/g' < /etc/nginx/conf.d/nginx.conf.template > /etc/nginx/conf.d/nginx.conf && timeout -s 9 10 nginx -g 'daemon off;'" ]

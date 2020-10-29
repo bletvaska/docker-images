@@ -1,0 +1,10 @@
+h1 b { 
+    font-size: 2em; 
+}
+
+footer {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    height: 50px;
+}
