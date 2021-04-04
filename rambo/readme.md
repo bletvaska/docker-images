@@ -2,7 +2,7 @@
 
 Simple image running _Nginx_ web server with _Rambo_ related web pages. The request part of Rambo series can be specified by tags:
 
-* `laters`, `2019`, `5`
+* `latest`, `2019`, `5`
 * `2008`, `4`
 * `1988`, `3`
 * `1985`, `2`

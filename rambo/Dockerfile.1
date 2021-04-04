@@ -1,20 +1,22 @@
 FROM nginx:alpine
 
+ARG part=1
+
 LABEL maintainer="mirek <mirek@cnl.sk>"
 LABEL title="First Blood"
 LABEL year="1982"
 LABEL description="A veteran Green Beret is forced by a cruel Sheriff and his deputies to flee into the mountains and wage an escalating one-man war against his pursuers."
 LABEL imdb="https://www.imdb.com/title/tt0083944"
-LABEL part="1"
+LABEL part="$part"
 
-ENV RAMBO_PART=1
+ENV RAMBO_PART=$part
 
 
 RUN rm /etc/nginx/conf.d/*
 ADD nginx.conf.template /etc/nginx/conf.d/
-ADD index.1.html /usr/share/nginx/html/index.html
+ADD index.$part.html /usr/share/nginx/html/index.html
 
-ADD images/rambo.1.jpg usr/share/nginx/html/images/rambo.1.jpg
-ADD css/rambo.1.css usr/share/nginx/html/css/rambo.1.css
+ADD images/rambo.$part.jpg usr/share/nginx/html/images/rambo.$part.jpg
+ADD css/rambo.$part.css usr/share/nginx/html/css/rambo.$part.css
 
 CMD [ "/bin/sh" , "-c" , "sed 's/${RAMBO_PART}/'${RAMBO_PART}'/g' < /etc/nginx/conf.d/nginx.conf.template > /etc/nginx/conf.d/nginx.conf && exec nginx -g 'daemon off;'" ]
