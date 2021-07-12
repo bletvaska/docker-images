@@ -1,0 +1,148 @@
+/*
+    Styles for epub
+*/
+
+/* alerts stolen from bootstrap */
+.alert {
+    position: relative;
+    padding: 0.75rem 1.25rem;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-radius: 0.25rem;
+}
+
+.alert-primary {
+    color: #004085;
+    background-color: #cce5ff;
+    border-color: #b8daff;
+    border-left-color: rgb(184, 218, 255);
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    border-left-color: rgb(245, 198, 203);
+}
+
+.alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.theme-alert-info {
+    border-left: 5px solid #0c5460;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #0c5460;
+}
+
+.theme-alert-danger {
+    border-left: 5px solid #d9534f;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #444;
+}
+
+.theme-alert-lecturer {
+    border-left: 5px solid #f0ad4e;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #444;
+}
+
+.alert-heading {
+    font-size: 1.1em !important;
+    font-weight: bold;
+    color: inherit;
+}
+
+div.alert > p:nth-child(1) {
+    font-size: 1.1em !important;
+    font-weight: bold;
+    color: inherit;
+
+}
+
+/* style of toc */
+ol.toc > li > ol.toc {
+    list-style-type: disc;
+}
+
+/* chapter title */
+section > h1 {
+    /* color: blue; */
+    font-size: 2.5em !important;
+}
+
+/* coverpage */
+
+/* titlepage */
+section.titlepage,
+section.titlepage > p {
+    text-align: center;
+}
+
+section.titlepage > h1 {
+    font-size: 250%;
+    margin-top: 1em;
+    margin-bottom: 0.1em;
+    color: #5474b4;
+}
+
+section.titlepage > .subtitle {
+    font-size: 150%;
+    font-weight: bold;
+    margin-top: 0.4em;
+    margin-bottom: 5em;
+}
+
+section.titlepage > .author {
+    font-size: 125%;
+    font-weight: bold;
+    margin-top: 5em;
+    margin-bottom: 0.5em;
+}
+
+section.titlepage > p > img {
+    margin-top: 3em;
+}
+
+section.titlepage > p.publisher-city {
+    margin-bottom: 0.5em;
+    margin-top: 0.8em;
+}
+
+/* table */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+td, th {
+    padding: 0.2em;
+}
+
+.hidden {
+    display: none;
+}
+
+/* references */
+.csl-entry {
+    margin-bottom: 1em;
+}

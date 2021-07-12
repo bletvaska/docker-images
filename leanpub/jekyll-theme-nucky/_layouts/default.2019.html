@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="sk">
+<head>
+    <title>{{ page.title }}</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="mirek (miroslav.binas@tuke.sk)">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+
+    <!-- Highlight JS -->
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css">
+
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+          integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
+          crossorigin="anonymous">
+
+    <!-- Course CSS -->
+    <link rel="stylesheet"
+          href="{{ site.baseurl }}/assets/css/theme.2019.css">
+</head>
+
+
+<body data-spy="scroll" data-target="#sidenav" data-offset="50">
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+
+{% include nav.2019.html %}
+
+<main role="main">
+    <div id="wrap">
+{{ content }}
+    </div>
+</main>
+
+
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 h-100 align-self-center">
+                <span class="footer-title">{{ site.title }}</span>
+                <p>{{ site.description | markdownify }}</p>
+            </div>
+
+            <div class="col-md-4">
+                <div class="license-icons">
+                    <img src="{{ site.baseurl }}/assets/img/cc.svg" alt="creative commons">
+                    <img src="{{ site.baseurl }}/assets/img/by.svg" alt="by">
+                    <img src="{{ site.baseurl }}/assets/img/nc-eu.svg" alt="nc">
+                    <img src="{{ site.baseurl }}/assets/img/sa.svg" alt="sa">
+                </div>
+
+                <p>
+                    Except, where otherwise noted, content on this site is licensed under a <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {% assign outlines = site.pages | where_exp: "item", "item.layout == 'outline'" | sort: "year" %}
+    {% assign min = outlines | first %}
+    {% assign max = outlines | last %}
+
+    <div class="footer-copyright">
+        <p>(c) {{ min.year }} - {{ max.year }} <a href="https://kpi.fei.tuke.sk/">Katedra počítačov a informatiky</a>,
+            <a href="http://www.tuke.sk/">Technická univerzita v Košiciach</a></p>
+    </div>
+</footer>
+
+
+<!-- Optional JavaScript -->
+<!-- Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+
+<!-- syntax highlighting -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+{% if jekyll.environment == "development" %}
+<!-- livejs -->
+<script src="https://livejs.com/live.js"></script>
+{% endif %}
+
+<!-- <script src="js/theme.js"></script> -->
+
+<script>
+$(document).ready(function(){
+    $('table').addClass('table').addClass('table-striped');
+    $('img').addClass('img-fluid');
+});
+</script>
+
+
+{% include google.analytics.html %}
+
+</body>
+</html>

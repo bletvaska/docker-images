@@ -1,0 +1,51 @@
+<script src="{{ site.baseurl}}/assets/js/jquery.countdown.min.js"></script>
+
+<script>
+$(function(){
+    $("#{{ include.id }}").countdown("{{ include.deadline }}", function (event) {
+        if (event.elapsed) {
+            $(this).html("Udalosť už prebehla.");
+        } else {
+            // start with message
+            {% if include.text %}
+            $(this).html("{{ include.text }}");
+            {% else if page.layout != "slides" %}
+            $(this).html("Do odovzdania zostáva <br/>");
+            {% else %}
+            $(this).html("");
+            {% endif %}
+
+            let span = $('<span>').css({
+                "font-family": "courier",
+                "font-weight": "bolder",
+            });
+
+            // format output
+            if(event.offset.totalDays == 0){
+                span.text(
+                    event.strftime('%H:%M:%S')
+                );
+            }else if(event.offset.totalDays == 1){
+                span.text(
+                    event.strftime('%D deň %H:%M:%S')
+                );
+            } else if(event.offset.totalDays >= 2 && event.offset.totalDays <= 4){
+                span.text(
+                    event.strftime('%D dni %H:%M:%S')
+                );
+            } else {
+                span.text(
+                    event.strftime('%D dní %H:%M:%S')
+                );
+            }
+
+            // append time to message
+            $(this).append(span);
+        }
+
+        $(this).css({
+            "text-align" : "center"
+        });
+    });
+});
+</script>

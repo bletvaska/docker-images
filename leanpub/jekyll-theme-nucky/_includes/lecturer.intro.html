@@ -1,0 +1,58 @@
+<div class="alert alert-warning theme-alert-lecturer">
+    <h4 class="alert-heading">
+        <span class="fas fa-paperclip" data-aria-hidden="true"></span> 
+        Poznámky pre učiteľa
+    </h4>
+
+    <table class="table table-striped">
+        <thead>
+            <tr class="header">
+                <th>miestnosť</th>
+                <th>s adaptérom</th>
+                <th>bez adaptéra</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="odd">
+                <td>P25</td>
+                <td><em>1280x760</em></td>
+                <td></td>
+            </tr>
+            <tr class="even">
+                <td>ZP1</td>
+                <td><em>1280x1024</em></td>
+                <td></td>
+            </tr>
+            <tr class="odd">
+                <td>AVWS</td>
+                <td><em>1024x768</em></td>
+                <td><em>1024x768</em></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>zapnúť nahrávanie (cez mocný <code>screencast.sh</code>)</li>
+        <li>zapnúť <a href="https://www.sli.do/accounts/login">sli.do</a></li>
+        {% for item in page.prerequisites %}
+        <li>{{ item | markdownify }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+
+{% if page.todo %}
+<div class="alert alert-info theme-alert-info">
+    <h4 class="alert-heading">
+        <span class="fas fa-clipboard-list" data-aria-hidden="true"></span> 
+        Todo 
+    </h4>
+
+    <ul>
+    {% for item in page.todo %}
+        <li>{{ item | markdownify }}</li>
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
+

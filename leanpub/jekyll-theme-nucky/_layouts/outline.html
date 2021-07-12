@@ -1,0 +1,45 @@
+---
+layout: default.2019
+---
+
+{% assign labs = site.pages | where_exp: "item", "item.layout == 'labs'" | where_exp: "item", "item.year == page.year" | sort: "week" %}
+{% assign lectures = site.pages | where_exp: "item", "item.layout == 'lecture'" | where_exp: "item", "item.year == page.year" | sort: "week" %}
+
+
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-3 title">Course Outline {{ page.year }}</h1>
+    </div>
+</div>
+
+<div class="container">
+<table>
+
+<tr>
+    <th>week</th><th>lectures</th><th>labs</th>
+</tr>
+
+{% for week in (1..page.weeks) %}
+<tr>
+    <td>{{ week }}</td>
+
+    <td>
+        {% assign lecture = lectures | where_exp: "item", "item.week == week" | first %}
+        {% if lecture %}
+            <a href="{{ lecture.url | prepend: site.baseurl }}"><b>{{ lecture.title }}</b></a>
+            {{ lecture.subtitle | markdownify }}
+        {% endif %}
+    </td>
+
+    <td>
+        {% assign lab = labs | where_exp: "item", "item.week == week" | first %}
+        {% if lab %}
+            <a href="{{ lab.url | prepend: site.baseurl }}"><b>{{ lab.title }}</b></a>
+            {{ lab.subtitle | markdownify }}
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}
+
+</table>
+</div>

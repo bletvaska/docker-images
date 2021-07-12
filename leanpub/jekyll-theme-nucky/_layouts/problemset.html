@@ -1,0 +1,18 @@
+---
+layout: default.2019
+---
+
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-3">
+        {%- if page.order %}
+            Problem Set #{{ page.order }}:
+        {% endif %}
+        {{ page.title }}</h1>
+        {{ page.subtitle | markdownify }}
+    </div>
+</div>
+
+<div class="container">
+{{ content }}
+</div>

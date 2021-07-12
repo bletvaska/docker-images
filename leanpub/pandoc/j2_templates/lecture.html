@@ -1,0 +1,15 @@
+# Chapter {{ meta["week"] }}. {{ meta["title"] }} {.chapter-title}
+
+{{ meta["subtitle"] }}
+
+{{ content }}
+
+
+{% if meta["bibliography"] %}
+## Additional Resources
+
+{% for entry in meta["bibliography"] %}
+* {{ entry }}
+{% endfor %}
+
+{% endif %}
