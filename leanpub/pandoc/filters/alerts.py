@@ -74,21 +74,35 @@ def to_html(elem, code):
 
 
 
-def to_epub(elem, code):
-
+def to_latex(elem, code):
     # prepare stuff
     title = mapping[code]['title']
-    content = pf.convert_text(elem.content[1:], input_format='panflute', output_format='html')
+    content = pf.convert_text(elem.content[1:], input_format='panflute', output_format='latex')
+
+    # populate template
+    alert = f"""
+    \\textbf{{{title}}}
+
+    {content}
+    """
+
+    # render
+    return pf.convert_text(alert, input_format='latex')
+
+
+def to_epub(elem, code):
+    # prepare stuff
+    title = mapping[code]['title']
+    content = pf.convert_text(elem.content[1:],
+                              input_format='panflute',
+                              output_format='html')
     classes = ' '.join(mapping[code]['classes'])
-    icon = mapping[code]['icon']
-    icon_classes = ' '.join(mapping[code]['icon-classes'])
+    # icon = mapping[code]['icon']
 
     # populate template
     alert = f"""
     <div class="{classes}" role="alert">
-        <p class="alert-heading">
-             {icon} {title}
-        </p>
+        <p class="alert-heading">{title}</p>
         <p>{content}</p>
     </div>
     """
@@ -133,15 +147,21 @@ def to_epub(elem, code):
 
 
 def action(elem, doc):
-    if isinstance(elem, BlockQuote):  # and doc.format == 'html':
-        code = elem.content[0].content[0].text
-        eprint(doc.format)
+    if isinstance(elem, BlockQuote):
+        try:
+            code = elem.content[0].content[0].text
+            eprint(doc.format)
 
-        if code in ('[comment]', '[warning]', '[lecturer]', '[solution]'):
-            if doc.format in ('html', 'html5'):
-                return to_html(elem, code)
-            elif doc.format == 'epub':
-                return to_epub(elem, code)
+            if code in ('[comment]', '[warning]', '[lecturer]', '[solution]'):
+                if doc.format in ('html', 'html5'):
+                    return to_html(elem, code)
+                elif doc.format == 'epub':
+                    return to_epub(elem, code)
+                elif doc.format == 'latex':
+                    return to_latex(elem, code)
+        except :
+            return elem
+
 
 
 def main(doc=None):

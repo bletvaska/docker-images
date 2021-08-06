@@ -1,21 +1,21 @@
 <section epub:type="titlepage" class="titlepage">
 
 $if(title)$
-    <h1 class="title">$title$</h1>
+    <h1 class="title align-center bold">$title$</h1>
 $endif$
 
 $if(subtitle)$
-    <p class="subtitle">$subtitle$</p>
+    <p class="subtitle align-center">$subtitle$</p>
 $endif$
 
 $for(creator)$
-    <p class="$creator.role$">
+    <p class="$creator.role$ align-center">
         <strong>$creator.text$</strong>
     </p>
 $endfor$
 
 $if(publisher)$
     $publisher.logo$
-    <p class="publisher-city">$publisher.city$</p>
+    <p class="publisher-city align-center">$publisher.city$</p>
 $endif$
 </section>

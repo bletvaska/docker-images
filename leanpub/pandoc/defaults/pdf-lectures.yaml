@@ -1,0 +1,49 @@
+# todo: --data-dir - mal by to byt priecinok pre pandoc, kde su vsetky veci a netreba mu ich potom davat rucne
+
+# input and output
+from: markdown
+to: latex
+output-file: lectures.tex
+
+# templating
+template: /pandoc/templates/pdf-lectures.tex
+standalone: true
+
+# citations
+citeproc: true
+csl: /pandoc/csl/ieee-with-url.csl
+bibliography:
+- bibliography.bib
+
+
+# filters
+filters:
+- /pandoc/filters/alerts.py
+- /pandoc/filters/number-tasks.py
+- /pandoc/filters/images-counter.py
+
+# pdf engine and latex
+pdf-engine: pdflatex
+pdf-engine-opts:
+- "-shell-escape"
+
+top-level-division: chapter
+
+variables:
+  documentclass: kitextbook
+
+  hyperrefoptions:
+  - linktoc=all
+  # - pdfwindowui
+  # - pdfpagemode=FullScreen
+
+# toc
+table-of-contents: true
+toc-depth: 2
+number-sections: true
+
+# syntax highlighting
+highlight-style: tango
+
+metadata-files:
+- metadata-lectures.yaml

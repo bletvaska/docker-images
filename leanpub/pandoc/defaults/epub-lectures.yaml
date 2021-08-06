@@ -1,0 +1,43 @@
+# todo: --data-dir - mal by to byt priecinok pre pandoc, kde su vsetky veci a netreba mu ich potom davat rucne
+
+# input and output
+from: markdown
+to: epub
+output-file: download/lectures.epub
+
+# templating
+template: /pandoc/templates/epub-lectures.html
+# standalone: true
+
+# citations
+citeproc: true
+csl: /pandoc/csl/ieee-with-url.csl
+bibliography:
+- bibliography.bib
+
+# filters
+filters:
+- /pandoc/filters/alerts.py
+- /pandoc/filters/number-tasks.py
+- /pandoc/filters/images-counter.py
+
+# toc
+table-of-contents: true
+toc-depth: 2
+
+# syntax highlighting
+highlight-style: tango
+
+# math support
+html-math-method:
+  method: mathjax
+  # url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+
+
+metadata-files:
+- metadata-lectures.yaml
+
+# css styles
+css:
+- /pandoc/styles/blitz.css
+- /pandoc/styles/epub.css

@@ -6,7 +6,7 @@ LABEL title="LeanPub Powered"
 LABEL description="LeanPub heavy powered docker image Courses at Department of Computers and Informatics at Technical University of Košice"
 
 # set timezone
-RUN apk add tzdata \
+RUN apk add --no-cache tzdata \
     && cp /usr/share/zoneinfo/Europe/Bratislava /etc/localtime \
     && echo "Europe/Bratislava" > /etc/timezone \
     && apk del tzdata
@@ -14,10 +14,10 @@ RUN apk add tzdata \
 # install pandoc and jekyll
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
     && apk update \
-    && apk add pandoc jekyll
+    && apk add --no-cache pandoc jekyll
 
 # install packages for jekyll
-RUN apk add make gcc libc-dev g++
+RUN apk add --no-cache make gcc libc-dev g++
 RUN gem install jekyll-pandoc paru minima
 RUN apk del make gcc libc-dev g++
 
@@ -31,13 +31,18 @@ RUN ls /tmp \
 
 #! TODO python, later replacement for pandoc filters in ruby
 # gettext zip
-RUN apk add python3 py3-pip py3-dotenv py3-requests py3-rich py3-jinja2 \
+RUN apk add --no-cache python3 py3-pip py3-dotenv py3-requests py3-rich py3-jinja2 \
     && ln -s /usr/bin/python3 /usr/bin/python \
     && pip install --no-cache-dir panflute invoke pydantic python-frontmatter
 
+# experimental - texlive support
+RUN apk add --no-cache texlive
+ENV TEXMFHOME=/texmf
+COPY texmf/ /texmf/
+
 # invoke needs bash
 # curl
-RUN apk add bash vim
+RUN apk add --no-cache bash vim
 
 # environment variables
 ENV JEKYLL_ENV=development

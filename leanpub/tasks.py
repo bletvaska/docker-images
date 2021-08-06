@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 from sys import exit
@@ -10,7 +11,8 @@ from dotenv import load_dotenv
 import requests
 from rich.console import Console
 from pydantic import BaseSettings
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, Template
+import yaml
 
 
 class DictObj:
@@ -32,6 +34,7 @@ class Settings(BaseSettings):
     course: str = None
     deploy_token: str = None
     lecturer_folder: str = None
+    log_level: str = 'INFO'
 
     class Config:
         env_file = '.env'
@@ -39,6 +42,13 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+logging.basicConfig(level=settings.log_level)
+
+# load site settings
+file = open('_config.yml')
+config = yaml.load(file, Loader=yaml.Loader)
+site = Site(**config)
+
 
 
 # load env variables
@@ -185,11 +195,50 @@ def deploy(ctx, destination='_public'):
         ctx.run(f'rm -rf {course}.zip {destination}')
 
 
+def _preprocess_labs(ctx, path):
+    """
+    Preprocess single labs file.
+    """
+    print(f'Preprocessing lab {path} ...')
+
+    # get chapter document
+    doc = frontmatter.load(path)
+
+    if 'layout' in doc and doc['layout'] == 'labs':
+        # remove {% if site.lecturer %} blocks
+        regex = re.compile(
+            r'\{%\s+if\s+site\.lecturer\s+%\}([^\{]*)\{%\s+endif\s+%\}',
+            re.MULTILINE|re.DOTALL
+            )
+        doc.content = regex.sub('', doc.content)
+
+    # render template
+    if 'epub' in doc and doc['epub']['type'] == 'foreword':
+        template = j2_env.get_template('epub-page.html')
+        return template.render(meta = doc.metadata, content = doc.content)
+
+    elif 'layout' in doc and doc['layout'] == 'labs':
+        # process doc.content as template first
+        tpl = Template(doc.content, comment_start_string='<!--', comment_end_string='-->')
+        content = tpl.render(page = Page(**doc.metadata), site = site)
+
+        # render document with template
+        template = j2_env.get_template('epub-lab.html')
+        return template.render(meta = doc.metadata, content = content)
+
+    elif 'type' in doc and doc['type'] == 'imprint':
+        template = j2_env.get_template('epub-imprint.html')
+        return template.render()
+
+    else:
+        return doc.content
+
+
 def _preprocess_lecture(ctx, path):
     """
-    Preprocess single file for later usage.
+    Preprocess single lecture file.
     """
-    print(f'Preprocessing {path} ...')
+    print(f'Preprocessing lecture {path} ...')
 
     # get chapter document
     doc = frontmatter.load(path)
@@ -197,9 +246,8 @@ def _preprocess_lecture(ctx, path):
     if 'layout' in doc and doc['layout'] == 'lecture':
 
         # filter stuff in chapter content
-        # remove all the links to slides
-        # todo: problem v prvej kapitole v odstavci, ked je ich tam viac
-        regex = re.compile(r'\(\[slide\]\(.+\)\)[^\S\r\n]*')
+        # remove all the links to slides [slide](url)
+        regex = re.compile(r'\(\[slide\]\([^)]*\)\)[^\S\r\n]*')
         doc.content = regex.sub('', doc.content)
 
         # remove first three characters (the list items and spaces)
@@ -211,7 +259,7 @@ def _preprocess_lecture(ctx, path):
         doc.content = regex.sub('', doc.content)
 
         # remove {% if site.lecturer %} blocks
-        regex = re.compile(r'\{%\s+if\s+site\.lecturer\s+%\}(.*)\{%\s+endif\s+%\}',
+        regex = re.compile(r'\{%\s+if\s+site\.lecturer\s+%\}([^\{]*)\{%\s+endif\s+%\}',
                 re.MULTILINE|re.DOTALL)
         doc.content = regex.sub('', doc.content)
 
@@ -221,9 +269,13 @@ def _preprocess_lecture(ctx, path):
         return template.render(meta = doc.metadata, content = doc.content)
 
     elif 'layout' in doc and doc['layout'] == 'lecture':
-        template = j2_env.get_template('lecture.html')
-        doc.content = template.render(meta = doc.metadata, content = doc.content)
-        return frontmatter.dumps(doc)
+        # process doc.content as template first
+        tpl = Template(doc.content, comment_start_string='<!--', comment_end_string='-->')
+        content = tpl.render(page = Page(**doc.metadata), site = site)
+
+        # render document with template
+        template = j2_env.get_template('epub-lecture.html')
+        return template.render(meta = doc.metadata, content = content)
 
     elif 'type' in doc and doc['type'] == 'imprint':
         template = j2_env.get_template('epub-imprint.html')
@@ -234,42 +286,34 @@ def _preprocess_lecture(ctx, path):
 
 
 @task
-def epub(ctx, _destination='_epub', _year='2021'):
+def epub(ctx, _lectures=True, _year='2021'):
     """
     Builds epub.
     """
 
+    # prepare content type
+    content_type = 'lectures' if _lectures else 'labs'
+
     # load metadata
     path = Path(_year)
-    metadata = frontmatter.load(path / 'metadata.yaml')
+    file = open(path / f'metadata-{content_type}.yaml')
+    metadata = yaml.load(file, Loader=yaml.Loader)
+    output = 'download/ebook.epub'
 
     # preprocess sources
     with console.status('[bold green] Preprocessing sources...') as status:
         for source in metadata['sources']:
             with open(path / f'_{source}', 'w') as f:
-                f.write(_preprocess_lecture(ctx, path / source))
+                if content_type == 'lectures':
+                    f.write(_preprocess_lecture(ctx, path / source))
+                else:
+                    f.write(_preprocess_labs(ctx, path / source))
 
-    # prepare pandoc params
-    # todo: --data-dir - mal by to byt priecinok pre pandoc, kde su vsetky veci a netreba mu ich potom davat rucne
+    # prepare pandoc default params
     cmd = [
         'pandoc',
-        '-o download/ebook.epub',
-        # '--standalone',
-        '--toc',
-        '--toc-depth=2',
-        '--filter /pandoc/filters/alerts.py',
-        '--filter /pandoc/filters/number-tasks.py',
-        '--filter /pandoc/filters/images-counter.py',
-        '--citeproc',
-        '--css /pandoc/styles/epub.css',
-        # '--css /pandoc/styles/bootstrap-icons.css',
-        # '--epub-embed-font=/pandoc/fonts/bootstrap-icons.woff',
-        # '--epub-embed-font=/pandoc/fonts/bootstrap-icons.woff2',
-        '--template=/pandoc/templates/epub-lectures.html',
-        '--highlight-style=tango', # pygments, tango, kate, haddock
-        '--mathml',
-        # '--number-sections',  # number sections and sub-sections
-        'metadata.yaml', # --metadata-file
+        f'--defaults /pandoc/defaults/epub-{content_type}.yaml',
+        f'-o {output}'
     ]
 
     # append sources
@@ -282,5 +326,66 @@ def epub(ctx, _destination='_epub', _year='2021'):
             ctx.run(' '.join(cmd), shell='/bin/sh')
 
             # cleanup
-            # for source in metadata['sources']:
-            #     ctx.run(f'rm _{source}')
+            for source in metadata['sources']:
+                ctx.run(f'rm _{source}')
+
+    # print destination file
+    logging.info(f'Book was written to {output}.')
+
+
+@task
+def pdf(ctx, _lectures=True, _year='2021'):
+    """
+    Builds PDF document.
+    """
+
+    # prepare content type
+    content_type = 'lectures' if _lectures else 'labs'
+
+    # load metadata
+    path = Path(_year)
+    file = open(path / f'metadata-{content_type}.yaml')
+    metadata = yaml.load(file, Loader=yaml.Loader)
+    output = 'lectures.tex'
+
+    # preprocess sources
+    with console.status('[bold green] Preprocessing sources...') as status:
+        for source in metadata['sources']:
+            with open(path / f'_{source}', 'w') as f:
+                if content_type == 'lectures':
+                    f.write(_preprocess_lecture(ctx, path / source))
+                else:
+                    f.write(_preprocess_labs(ctx, path / source))
+
+
+    # prepare pandoc default params
+    cmd = [
+        'pandoc',
+        f'--defaults /pandoc/defaults/pdf-{content_type}.yaml',
+        f'-o {output}'
+    ]
+
+    # append sources
+    for source in metadata['sources']:
+        cmd.append(f'_{source}')
+
+    # build pdf
+    with ctx.cd(_year):
+        with console.status('[bold green] Building PDF...') as status:
+            ctx.run(' '.join(cmd), shell='/bin/sh')
+
+            # cleanup
+            for source in metadata['sources']:
+                ctx.run(f'rm _{source}')
+
+    # print destination file
+    logging.info(f'Book was written to {output}.')
+
+
+# TODO treba inac vyriesit - rovno z entrypointu
+@task
+def shell(ctx):
+    """
+    Runs shell in the courseware (current) directory.
+    """
+    ctx.run('/bin/bash')

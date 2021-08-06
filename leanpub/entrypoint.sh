@@ -21,7 +21,7 @@ main(){
     fi
 
     # check what to do based on jekyll commands
-    if $(echo "${1}" | grep -Eq "(build|clean|serve|update|install|deploy|epub|preprocess)"); then
+    if $(echo "${1}" | grep -Eq "(build|clean|serve|update|install|deploy|epub|pdf|shell)"); then
         invoke "${@}"
 
         exit 0

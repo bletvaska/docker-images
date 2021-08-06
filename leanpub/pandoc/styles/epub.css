@@ -74,9 +74,9 @@ div.alert > p:nth-child(1) {
 }
 
 /* style of toc */
-ol.toc > li > ol.toc {
+/* ol.toc > li > ol.toc {
     list-style-type: disc;
-}
+} */
 
 /* chapter title */
 section > h1 {
@@ -87,16 +87,16 @@ section > h1 {
 /* coverpage */
 
 /* titlepage */
-section.titlepage,
+/* section.titlepage,
 section.titlepage > p {
     text-align: center;
-}
+} */
 
 section.titlepage > h1 {
     font-size: 250%;
     margin-top: 1em;
     margin-bottom: 0.1em;
-    color: #5474b4;
+    /* color: #5474b4; */
 }
 
 section.titlepage > .subtitle {
@@ -144,5 +144,70 @@ td, th {
 
 /* references */
 .csl-entry {
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
+}
+
+div.hanging-indent {
+	margin-left: 1.5em;
+	text-indent: -1.5em;
+}
+
+/* blockquote for citations */
+/* inspiration from: https://codepen.io/cliftwalker/pen/XJaEXY */
+/* todo: blockquote span */
+blockquote{
+    font-size: 1.4em;
+    margin:20px auto;
+    font-family:Open Sans;
+    font-style:italic;
+    color: #555555;
+    padding:1.2em 35px 1.2em 75px;
+    border-left:5px solid #78C0A8 ;
+    line-height:1.6;
+    position: relative;
+    background:#EDEDED;
+}
+
+blockquote::before{
+    font-family:Arial;
+    content: "\201C";
+    color:#78C0A8;
+    font-size:4em;
+    position: absolute;
+    left: 10px;
+    top:-10px;
+}
+
+blockquote::after{
+    content: '';
+}
+
+blockquote span{
+    display:block;
+    color:#333333;
+    font-style: normal;
+    font-weight: bold;
+    margin-top:1em;
+}
+
+/* todo: nevyzera to dobre v tabulkach :-( */
+/* background for inline code elements */
+pre.raw {
+    background-color: #f8f8f8;
+}
+
+
+/* references */
+div.csl-entry > div:nth-child(1) {
+    float: left;
+}
+
+div.csl-entry > div:nth-child(2) {
+    margin-left: 3em;
+}
+
+
+/* bold headings */
+h1, h2, h3, h4 {
+    font-weight: bold;
 }
