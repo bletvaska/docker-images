@@ -27,9 +27,13 @@ $for(classoption)$
   $classoption$$sep$,
 $endfor$
 ]{$documentclass$}
+
+
 $if(title)$
 \title{$title$$if(thanks)$\thanks{$thanks$}$endif$}
+\renewcommand{\thetitle}{$title$}
 $endif$
+
 $if(subtitle)$
 \usepackage{etoolbox}
 \makeatletter
@@ -38,9 +42,12 @@ $if(subtitle)$
 }
 \makeatother
 \subtitle{$subtitle$}
+\renewcommand{\thesubtitle}{$subtitle$}
 $endif$
-\author{$for(author)$$author$$sep$ \and $endfor$}
+
+\author{$for(creator)$$creator.text$$sep$ \and $endfor$}
 \date{$date$}
+
 \usepackage{amsmath,amssymb}
 $if(fontfamily)$
 \usepackage[$for(fontfamilyoptions)$$fontfamilyoptions$$sep$,$endfor$]{$fontfamily$}
@@ -165,8 +172,8 @@ $endif$
 $if(subject)$
   pdfsubject={$subject$},
 $endif$
-$if(keywords)$
-  pdfkeywords={$for(keywords)$$keywords$$sep$, $endfor$},
+$if(subject)$
+  pdfkeywords={$for(subject)$$subject$$sep$, $endfor$},
 $endif$
 $if(colorlinks)$
   colorlinks=true,
@@ -338,47 +345,42 @@ $if(csquotes)$
 $endif$
 
 \begin{document}
-$if(has-frontmatter)$
 \frontmatter
-$endif$
-$if(title)$
-\maketitle
-$if(abstract)$
-\begin{abstract}
-$abstract$
-\end{abstract}
-$endif$
-$endif$
 
 $for(include-before)$
 $include-before$
-
 $endfor$
-$if(toc)$
-$if(toc-title)$
-\renewcommand*\contentsname{$toc-title$}
-$endif$
 
-{
-$if(colorlinks)$
-\hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$$endif$}
-$endif$
-\setcounter{tocdepth}{$toc-depth$}
-\tableofcontents
-}
-$endif$
-$if(lof)$
-\listoffigures
-$endif$
-$if(lot)$
-\listoftables
-$endif$
-$if(linestretch)$
-\setstretch{$linestretch$}
-$endif$
-$if(has-frontmatter)$
-\mainmatter
-$endif$
+
+% $if(toc)$
+% $if(toc-title)$
+% \renewcommand*\contentsname{$toc-title$}
+% $endif$
+
+% {
+% $if(colorlinks)$
+% \hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$$endif$}
+% $endif$
+% \setcounter{tocdepth}{$toc-depth$}
+% \tableofcontents
+% }
+% $endif$
+
+% $if(lof)$
+% \listoffigures
+% $endif$
+% $if(lot)$
+% \listoftables
+% $endif$
+% $if(linestretch)$
+% \setstretch{$linestretch$}
+% $endif$
+
+% $if(has-frontmatter)$
+% \mainmatter
+% $endif$
+
+
 $body$
 
 $if(has-frontmatter)$

@@ -31,6 +31,7 @@ top-level-division: chapter
 
 variables:
   documentclass: kitextbook
+  lang: sk  # sets the language of a document
 
   hyperrefoptions:
   - linktoc=all
@@ -40,7 +41,8 @@ variables:
 # toc
 table-of-contents: true
 toc-depth: 2
-number-sections: true
+#! FIXME robi to nejaky bordel
+# number-sections: true
 
 # syntax highlighting
 highlight-style: tango

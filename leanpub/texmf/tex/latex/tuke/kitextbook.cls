@@ -19,6 +19,27 @@
 \typeout{***********************************************}
 \typeout{}
 
+% environments
+\RequirePackage[framemethod=tikz]{mdframed}
+
+\newmdenv[
+    rightline=true,
+    innerleftmargin=10,
+    innerrightmargin=10,
+    linecolor=gray,
+    outerlinewidth=1mm,
+    topline=false,
+    rightline=true,
+    bottomline=false,
+    skipabove=\topsep,
+    skipbelow=\topsep
+    ]{infobox}
+
+
+% commands definitions
+\newcommand{\thetitle}{}
+\newcommand{\thesubtitle}{}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% Using book class as base.
@@ -337,46 +358,51 @@
 %%%
 %%% Front matter
 %%%
-%%% - outside and inside front cover
-%%% - title leaf
-%%% Do not include the date of make!
-%%% Institution + department.
-%%% Names of referees. (optional)
-%%% Degree.
-%%% Date of submission and defense. (optional)
-%%% Place and date of publication and publishers (and other info by them).
 %%
-%\newcommand{\frontmatter}{
-    %\pagenumbering{roman}
-    %\frontpage
-    %\titlepage
-    %\abstractpage
+\renewcommand{\frontmatter}{
+    \pagenumbering{roman}
+    \pagestyle{empty}
 
-    %% thesis detail specification
-    %\@thesisspec
+    % cover and blank page
+    \includepdf{images/book.cover.a4}
+    \cleardoublepage
 
-    %\declarationpage
-    %\acknowledgmentpage
+    % patitul
+    \vspace*{2cm}
+    \begin{center}
+        \thetitle
+    \end{center}
+    \cleardoublepage
 
-    %\pagestyle{plain}
-    %\tableofcontents
-    %\newpage
+    % titlepage
+    \titlepage
+    % \abstractpage
 
-    %% show list of figures only if there are some
-    %\iftotalfigures%
-        %\listoffigures%
-        %\newpage%
-    %\fi
+    % thesis detail specification
+    % \@thesisspec
 
-    %% show list of tables only if there are some
-    %\iftotaltables%
-        %\listoftables%
-        %\newpage%
-    %\fi
+    % \declarationpage
+    % \acknowledgmentpage
 
-    %\pagestyle{fancy}
-    %\pagenumbering{arabic}
-%}
+    \pagestyle{plain}
+    \tableofcontents
+    \newpage
+
+    % show list of figures only if there are some
+    \iftotalfigures%
+        \listoffigures%
+        \newpage%
+    \fi
+
+    % show list of tables only if there are some
+    \iftotaltables%
+        \listoftables%
+        \newpage%
+    \fi
+
+    \pagestyle{fancy}
+    \pagenumbering{arabic}
+}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -524,43 +550,27 @@
 %%% Title page component
 %%%
 %%%%%%
-%\renewcommand{\titlepage}{
-    %\thispagestyle{empty}
+\renewcommand{\titlepage}{
+    \thispagestyle{empty}
 
-    %\begin{center}
-        %{\Large \textbf{\@college@sk}}
+    \vspace*{5cm}
 
-        %{\Large \textbf{\@faculty@sk}}
+    \begin{center}
+        {\LARGE \textbf{\thetitle}}
 
-        %\vfill
+        \thesubtitle
 
-        %{\LARGE \textbf{\@title@sk} \par}
+        \bigskip
 
-        %\bigskip
+        {\textbf \@author}
 
-        %{\large \textbf{\@thesis@sk}}
-    %\end{center}
+        \vfill
 
-    %\vfill
+        \includegraphics[width=3cm]{images/logo.kpi}
+    \end{center}
 
-    %\noindent
-    %\begin{tabular}{@{}p{.26\textwidth}p{.7\textwidth}}
-        %Študijný program:& \@studyprogramme \\
-        %Študijný odbor:& \@fieldofstudy \\
-        %Školiace pracovisko:& \@department@sk~(\@departmentacr@sk) \\
-        %Školiteľ:& \@supervisor \\
-        %Konzultant:& \@consultant \\
-    %\end{tabular}
-
-    %\vspace{2\baselineskip}
-
-    %\begin{center}
-        %\centering
-        %{\Large \textbf{\@college@city{} \@submissionyear}} \hfill {\Large \textbf{\@author@prefix~\@author@firstname~\@author@lastname~\@author@postfix}}
-    %\end{center}
-
-    %\newpage
-%}
+    \newpage
+}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

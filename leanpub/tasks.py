@@ -362,7 +362,7 @@ def pdf(ctx, _lectures=True, _year='2021'):
     cmd = [
         'pandoc',
         f'--defaults /pandoc/defaults/pdf-{content_type}.yaml',
-        f'-o {output}'
+        f'-o {output}',
     ]
 
     # append sources
