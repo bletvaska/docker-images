@@ -36,7 +36,7 @@ RUN apk add --no-cache python3 py3-pip py3-dotenv py3-requests py3-rich py3-jinj
     && pip install --no-cache-dir panflute invoke pydantic python-frontmatter
 
 # experimental - texlive support
-RUN apk add --no-cache texlive
+# RUN apk add --no-cache texlive
 ENV TEXMFHOME=/texmf
 COPY texmf/ /texmf/
 

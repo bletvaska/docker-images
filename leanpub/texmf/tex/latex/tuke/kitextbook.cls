@@ -20,20 +20,27 @@
 \typeout{}
 
 % environments
-\RequirePackage[framemethod=tikz]{mdframed}
+\RequirePackage[skins]{tcolorbox}
 
-\newmdenv[
-    rightline=true,
-    innerleftmargin=10,
-    innerrightmargin=10,
-    linecolor=gray,
-    outerlinewidth=1mm,
-    topline=false,
-    rightline=true,
-    bottomline=false,
-    skipabove=\topsep,
-    skipbelow=\topsep
-    ]{infobox}
+\newtcolorbox{infobox}[1]{
+    % enhanced,
+    % sharp corners=all,
+    arc=0pt,
+    % colback=white,
+    % colframe=gray,
+    toprule=0pt,
+    bottomrule=0pt,
+    % leftrule=1pt,
+    % rightrule=1pt,
+    % overlay={
+    %     \draw[gray,line width=1pt] (frame.north west) -- ++(2cm,0pt);
+    %     \draw[gray,line width=1pt] (frame.south east) -- ++(-2cm,0pt);
+    % },
+    % coltitle=black,
+    colbacktitle=white,
+    % titlerule=0pt,
+    % title={\vskip5pt\bfseries#1}
+}
 
 
 % commands definitions

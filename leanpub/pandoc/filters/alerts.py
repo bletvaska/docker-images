@@ -10,11 +10,6 @@ from panflute import Str, Space, Div, Header, Span, BlockQuote
 import panflute as pf
 
 
-def eprint(*args, **kwargs):
-    with open('/tmp/out', 'a') as f:
-        print(*args, file=f, **kwargs)
-
-
 mapping = {
     '[comment]': {
         'classes': ['alert', 'alert-primary', 'theme-alert-info'],
@@ -80,14 +75,21 @@ def to_latex(elem, code):
     content = pf.convert_text(elem.content[1:], input_format='panflute', output_format='latex')
 
     # populate template
-    alert = f"""
-    \\textbf{{{title}}}
+    return [
+        pf.RawBlock('\\begin{infobox}', format='latex'),
+        pf.RawBlock(f'\\textbf{{{title}}}', format='latex'),
+        pf.RawBlock(content, format='latex'),
+        pf.RawBlock('\\end{infobox}', format='latex'),
+    ]
 
-    {content}
-    """
+    # alert = f"""
+    # \\begin{{infobox}}
+    # \\textbf{{{title}:}} {content}
+    # \\end{{infobox}}
+    # """
 
-    # render
-    return pf.convert_text(alert, input_format='latex')
+    # # render
+    # return pf.convert_text(alert, input_format='latex')
 
 
 def to_epub(elem, code):
@@ -110,47 +112,11 @@ def to_epub(elem, code):
     # render
     return pf.convert_text(alert, input_format='html')
 
-    div = Div(classes=mapping[code]['classes'])
-
-    # prepare content
-    # icon
-    icon = Span(classes=mapping[code]['icon-classes'],
-                attributes={'aria-hidden': 'true'})
-
-    # title
-    title = [icon, Space]
-    if len(elem.content[0].content[1:]) == 0:
-        title.append(Str(mapping[code]['title']))
-    else:
-        title.append(Str(elem.content[0].content[1:]))
-
-    header = Div()
-    header.content.append(icon)
-    header.content.append(Space)
-    header.content.append(title[2])
-
-    # header = Header(*title, level=4, classes=['alert-heading'])
-
-    # title = pf.Strong()
-    # title.content = elem.content[0].content[1:]
-
-    # if len(title.content) == 0:
-    # title.content.append(pf.Str(' ' + mapping[code]['title']))
-
-    # para = pf.Para(icon, title)
-
-    # div.content.extend(icon)
-    div.content.append(header)
-    div.content.extend(elem.content[1:])
-
-    return div
-
 
 def action(elem, doc):
     if isinstance(elem, BlockQuote):
         try:
             code = elem.content[0].content[0].text
-            eprint(doc.format)
 
             if code in ('[comment]', '[warning]', '[lecturer]', '[solution]'):
                 if doc.format in ('html', 'html5'):
