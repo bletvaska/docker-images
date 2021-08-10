@@ -50,8 +50,42 @@ $ leanpub serve
 ```
 
 
-## Building the ePub
+### Building the ePub
+
+```bash
+$ leanpub epub
+```
 
 
-## Building the PDF
+### Building the PDF
 
+```bash
+$ leanpub pdf
+$ latexmk -pdfxe -bibtex -pvc -shell-escape lectures.tex
+```
+
+
+## Development
+
+The templates and styles of artefacts are part of the Docker image. To modify them freely without rebuilding the image all the time, create the `leanpub` alisa following way:
+
+```bash
+$ alias leanpub='docker container run --rm -it \
+    --volume $(pwd):/courseware \
+    --volume /path/to/docker/image/leanpub/pandoc/:/pandoc \
+    --publish 4000:4000 \
+    --user $(id -u ${USER}):$(id -g ${USER}) \
+    leanpub'
+```
+
+For modifying the _LaTeX_ template it is necessary to export `$TEXMFHOME` environment variable:
+
+```bash
+$ export TEXMFHOME=/path/to/docker/image/leanpub/texmf/
+```
+
+Then you can run locally command:
+
+```bash
+$ latexmk -pdfxe -bibtex -pvc -shell-escape lectures.tex
+```
