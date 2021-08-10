@@ -76,10 +76,10 @@ def to_latex(elem, code):
 
     # populate template
     return [
-        pf.RawBlock('\\begin{infobox}', format='latex'),
-        pf.RawBlock(f'\\textbf{{{title}}}', format='latex'),
-        pf.RawBlock(content, format='latex'),
-        pf.RawBlock('\\end{infobox}', format='latex'),
+        # pf.RawBlock('\\begin{infobox}', format='latex'),
+        # pf.RawBlock(f'\\textcolor{{red!75!black}}{{\\textbf{{{title}}}}}', format='latex'),
+        # pf.RawBlock(content, format='latex'),
+        # pf.RawBlock('\\end{infobox}', format='latex'),
     ]
 
     # alert = f"""

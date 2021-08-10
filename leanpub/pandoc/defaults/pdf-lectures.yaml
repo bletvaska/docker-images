@@ -10,8 +10,8 @@ template: /pandoc/templates/pdf-lectures.tex
 standalone: true
 
 # citations
-citeproc: true
-csl: /pandoc/csl/ieee-with-url.csl
+# citeproc: true
+# csl: /pandoc/csl/ieee-with-url.csl
 bibliography:
 - bibliography.bib
 
@@ -23,7 +23,7 @@ filters:
 - /pandoc/filters/images-counter.py
 
 # pdf engine and latex
-pdf-engine: pdflatex
+pdf-engine: xelatex
 pdf-engine-opts:
 - "-shell-escape"
 
@@ -32,6 +32,8 @@ top-level-division: chapter
 variables:
   documentclass: kitextbook
   lang: sk  # sets the language of a document
+  links-as-notes: true
+  colorlinks: true
 
   hyperrefoptions:
   - linktoc=all

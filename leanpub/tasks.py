@@ -58,8 +58,7 @@ console = Console()
 
 # jinja2 setup
 j2_env = Environment(
-  loader=FileSystemLoader(
-    '/pandoc/j2_templates'),
+  loader=FileSystemLoader('/pandoc/j2_templates'),
   autoescape=False
 )
 

@@ -42,7 +42,7 @@ COPY texmf/ /texmf/
 
 # invoke needs bash
 # curl
-RUN apk add --no-cache bash vim
+RUN apk add --no-cache bash vim zip
 
 # environment variables
 ENV JEKYLL_ENV=development
