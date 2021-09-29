@@ -1,22 +1,37 @@
 FROM nginx:alpine
 
+# the arguments describing the title
 ARG part=2
+ARG title="First Blood Part II"
+ARG year="1985"
+ARG description="Rambo returns to the jungles of Vietnam on a mission to infiltrate an enemy base-camp and rescue the American POWs still held captive there."
+ARG imdb="https://www.imdb.com/title/tt0089880"
 
+# metadata labels
 LABEL maintainer="mirek <mirek@cnl.sk>"
-LABEL title="First Blood Part II"
-LABEL year="1985"
-LABEL description="Rambo returns to the jungles of Vietnam on a mission to infiltrate an enemy base-camp and rescue the American POWs still held captive there."
-LABEL imdb="https://www.imdb.com/title/tt0089880"
+LABEL title="$title"
+LABEL year="$year"
+LABEL description="$description"
+LABEL imdb="$imdb"
 LABEL part="$part"
 
-ENV RAMBO_PART=$part
-
+# environment variables
+ENV part=$part
+ENV title=$title
+ENV year=$year
+ENV description=$description
+ENV imdb=$imdb
 
 RUN rm /etc/nginx/conf.d/*
-ADD nginx.conf.template /etc/nginx/conf.d/
-ADD index.$part.html /usr/share/nginx/html/index.html
+ADD nginx.conf.template /etc/nginx/conf.d/nginx.conf
+ADD index.html /usr/share/nginx/html/index.html
 
 ADD images/rambo.$part.jpg usr/share/nginx/html/images/rambo.$part.jpg
-ADD css/rambo.$part.css usr/share/nginx/html/css/rambo.$part.css
+# ADD css/rambo.$part.css usr/share/nginx/html/css/rambo.$part.css
 
-CMD [ "/bin/sh" , "-c" , "sed 's/${RAMBO_PART}/'${RAMBO_PART}'/g' < /etc/nginx/conf.d/nginx.conf.template > /etc/nginx/conf.d/nginx.conf && exec nginx -g 'daemon off;'" ]
+RUN sed -e "s/{{TITLE}}/${title}/g" \
+        -e "s/{{YEAR}}/${year}/g" \
+        -e "s/{{DESCRIPTION}}/${description}/g" \
+        -e "s/{{PART}}/${part}/g" \
+        -e "s|{{IMDB}}|${imdb}|g" \
+        -i /usr/share/nginx/html/index.html

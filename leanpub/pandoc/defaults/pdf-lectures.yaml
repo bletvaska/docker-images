@@ -10,10 +10,11 @@ template: /pandoc/templates/pdf-lectures.tex
 standalone: true
 
 # citations
-# citeproc: true
-# csl: /pandoc/csl/ieee-with-url.csl
+citeproc: true
+csl: /pandoc/csl/ieee-with-url.csl
 bibliography:
 - bibliography.bib
+cite-method: biblatex
 
 
 # filters
@@ -21,6 +22,7 @@ filters:
 - /pandoc/filters/alerts.py
 - /pandoc/filters/number-tasks.py
 - /pandoc/filters/images-counter.py
+- /pandoc/filters/pandoc-crossref
 
 # pdf engine and latex
 pdf-engine: xelatex
@@ -33,18 +35,33 @@ variables:
   documentclass: kitextbook
   lang: sk  # sets the language of a document
   links-as-notes: true
-  colorlinks: true
+  colorlinks: true  # hyperref colors
+  linkcolor: magenta
+  filecolor: magenta
+  citecolor: magenta
+  urlcolor: magenta
+  toccolor: magenta
+  has-frontmatter: true
+  tables: true
+  biblio-title: Literatúra
+  csquotes: true
 
   hyperrefoptions:
   - linktoc=all
+  - breaklinks
   # - pdfwindowui
   # - pdfpagemode=FullScreen
 
+  # babel config
+  babel-otherlangs:
+  - english
+  babel-newcommands:
+  - \addto\captionsslovak{\renewcommand\chaptername{Prednáška}}
+
 # toc
 table-of-contents: true
-toc-depth: 2
-#! FIXME robi to nejaky bordel
-# number-sections: true
+# toc-depth: 3
+number-sections: true
 
 # syntax highlighting
 highlight-style: tango

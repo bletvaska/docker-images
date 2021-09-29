@@ -1,9 +1,10 @@
-FROM alpine
+FROM alpine:edge
 #FROM ruby:2.7-alpine
 
 LABEL maintainer="mirek <mirek@cnl.sk>"
 LABEL title="LeanPub Powered"
 LABEL description="LeanPub heavy powered docker image Courses at Department of Computers and Informatics at Technical University of Košice"
+LABEL version="2021.09"
 
 # set timezone
 RUN apk add --no-cache tzdata \
@@ -26,7 +27,7 @@ COPY jekyll-theme-nucky/ /tmp/jekyll-theme-nucky/
 RUN ls /tmp \
     && cd /tmp/jekyll-theme-nucky \
     && gem build jekyll-theme-nucky.gemspec \
-    && gem install --local jekyll-theme-nucky-2021.2.gem \
+    && gem install --local jekyll-theme-nucky-2021.09.gem \
     && rm -rf /tmp/jekyll-theme-nucky
 
 #! TODO python, later replacement for pandoc filters in ruby
@@ -41,8 +42,8 @@ ENV TEXMFHOME=/texmf
 COPY texmf/ /texmf/
 
 # invoke needs bash
-# curl
-RUN apk add --no-cache bash vim zip
+# zip and curl for deployment
+RUN apk add --no-cache bash vim zip curl
 
 # environment variables
 ENV JEKYLL_ENV=development

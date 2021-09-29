@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # get the data
-TIME=$(date "+%H:%M:%S")
+TIME=$(date "+%H:%M:%S %d.%m.%Y")
 IP=$(hostname -i)
 HOSTNAME=$(hostname)
 

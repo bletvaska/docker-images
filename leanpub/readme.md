@@ -4,6 +4,10 @@ Image for building my courses, which are written with [Jekyll](https://jekyllrb.
 
 For generating is used `pandoc` instead of built in `kramdown` and won theme `nucky` is also builtin in the image.
 
+External projects:
+
+* [Pandoc Crossref](https://github.com/lierdakil/pandoc-crossref) - Pandoc filter for cross-references
+
 
 ## Generating the Web with Jekyll
 

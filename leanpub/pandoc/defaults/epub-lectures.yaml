@@ -3,7 +3,7 @@
 # input and output
 from: markdown
 to: epub
-output-file: download/lectures.epub
+# output-file: download/smart.lectures.2021.epub
 
 # templating
 template: /pandoc/templates/epub-lectures.html
@@ -40,4 +40,4 @@ metadata-files:
 # css styles
 css:
 - /pandoc/styles/blitz.css
-- /pandoc/styles/epub.css
+#- /pandoc/styles/epub.css

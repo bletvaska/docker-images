@@ -194,7 +194,7 @@ def deploy(ctx, destination='_public'):
         ctx.run(f'rm -rf {course}.zip {destination}')
 
 
-def _preprocess_labs(ctx, path):
+def _preprocess_labs(ctx, path, format='html'):
     """
     Preprocess single labs file.
     """
@@ -233,7 +233,7 @@ def _preprocess_labs(ctx, path):
         return doc.content
 
 
-def _preprocess_lecture(ctx, path):
+def _preprocess_lecture(ctx, path, format='html', replacements=None):
     """
     Preprocess single lecture file.
     """
@@ -262,6 +262,11 @@ def _preprocess_lecture(ctx, path):
                 re.MULTILINE|re.DOTALL)
         doc.content = regex.sub('', doc.content)
 
+    # replacements
+    if replacements is not None:
+        for key in replacements:
+            doc.content = doc.content.replace(key, replacements[key])
+
     # render template
     if 'epub' in doc and doc['epub']['type'] == 'foreword':
         template = j2_env.get_template('epub-page.html')
@@ -273,7 +278,10 @@ def _preprocess_lecture(ctx, path):
         content = tpl.render(page = Page(**doc.metadata), site = site)
 
         # render document with template
-        template = j2_env.get_template('epub-lecture.html')
+        if format == 'pdf':
+            template = j2_env.get_template('pdf-lecture.html')
+        else:
+            template = j2_env.get_template('epub-lecture.html')
         return template.render(meta = doc.metadata, content = content)
 
     elif 'type' in doc and doc['type'] == 'imprint':
@@ -297,14 +305,14 @@ def epub(ctx, _lectures=True, _year='2021'):
     path = Path(_year)
     file = open(path / f'metadata-{content_type}.yaml')
     metadata = yaml.load(file, Loader=yaml.Loader)
-    output = 'download/ebook.epub'
+    output = 'download/smart.lectures.2021.epub'
 
     # preprocess sources
     with console.status('[bold green] Preprocessing sources...') as status:
-        for source in metadata['sources']:
+        for source in metadata['sources']['epub']:
             with open(path / f'_{source}', 'w') as f:
                 if content_type == 'lectures':
-                    f.write(_preprocess_lecture(ctx, path / source))
+                    f.write(_preprocess_lecture(ctx, path / source, 'html'))
                 else:
                     f.write(_preprocess_labs(ctx, path / source))
 
@@ -316,7 +324,7 @@ def epub(ctx, _lectures=True, _year='2021'):
     ]
 
     # append sources
-    for source in metadata['sources']:
+    for source in metadata['sources']['epub']:
         cmd.append(f'_{source}')
 
     # build epub
@@ -325,7 +333,7 @@ def epub(ctx, _lectures=True, _year='2021'):
             ctx.run(' '.join(cmd), shell='/bin/sh')
 
             # cleanup
-            for source in metadata['sources']:
+            for source in metadata['sources']['epub']:
                 ctx.run(f'rm _{source}')
 
     # print destination file
@@ -349,23 +357,25 @@ def pdf(ctx, _lectures=True, _year='2021'):
 
     # preprocess sources
     with console.status('[bold green] Preprocessing sources...') as status:
-        for source in metadata['sources']:
+        for source in metadata['sources']['pdf']:
             with open(path / f'_{source}', 'w') as f:
                 if content_type == 'lectures':
-                    f.write(_preprocess_lecture(ctx, path / source))
+                    content = _preprocess_lecture(ctx, path / source, 'pdf', metadata['replacements']['pdf'])
+                    f.write(content)
                 else:
                     f.write(_preprocess_labs(ctx, path / source))
-
 
     # prepare pandoc default params
     cmd = [
         'pandoc',
         f'--defaults /pandoc/defaults/pdf-{content_type}.yaml',
         f'-o {output}',
+        # '--include-after-body appendix.01.md',
+        # '--include-after-body appendix.02.md',
     ]
 
     # append sources
-    for source in metadata['sources']:
+    for source in metadata['sources']['pdf']:
         cmd.append(f'_{source}')
 
     # build pdf
@@ -374,7 +384,7 @@ def pdf(ctx, _lectures=True, _year='2021'):
             ctx.run(' '.join(cmd), shell='/bin/sh')
 
             # cleanup
-            for source in metadata['sources']:
+            for source in metadata['sources']['pdf']:
                 ctx.run(f'rm _{source}')
 
     # print destination file

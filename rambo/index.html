@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!--#config timefmt="%d.%m.%Y %H:%M:%S" -->
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+        <meta http-equiv="refresh" content="1" >
+
+        <!-- Bootstrap CSS -->
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+            integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+            crossorigin="anonymous"
+        />
+        <!-- <link rel="stylesheet" href="css/rambo.{{PART}}.css" /> -->
+
+        <title>RAMBO {{PART}}</title>
+    </head>
+
+    <body>
+        <main class="container" role="main">
+            <div class="row">
+                <div class="col col-md-6 col-12">
+                    <img src="images/rambo.{{PART}}.jpg" class="img-fluid" />
+                </div>
+
+                <div class="col col-md-6 col-12">
+                    <h1>{{TITLE}}</h1>
+                    <p>({{YEAR}})</p>
+                    <p>{{DESCRIPTION}} (<a href="{{IMDB}}">imdb</a>)</p>
+
+                    <h2>Container Info</h2>
+
+                    <ul>
+                        <li>IP: <b>{{server_address}}</b></li>
+                        <li>Hostname: <b>{{server_hostname}}</b></li>
+                        <li>Date: <b><!--#echo var="DATE_LOCAL" --></b>
+                        </li>
+                        <li>URI: <b>{{server_url}}</b></li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <footer class="text-center footer fixed-bottom">
+            <div class="container">
+                Request ID: {{request_id}}<br />&copy; NGINX, Inc. 2018 and
+                mirek 2020 - 2021
+            </div>
+        </footer>
+
+        <!-- JavaScript-->
+        <script
+            src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>
