@@ -1,0 +1,34 @@
+set number          " enables line numbers by default
+color elflord
+"set paste
+set expandtab
+syntax on
+set incsearch       " incremental search
+set hlsearch        " highlight search words
+set mouse=a
+set autoindent
+set ts=4
+set shiftwidth=4    " width of shift in visual mode
+set encoding=utf8
+set ruler
+set showmatch       " show matching brackets
+set autoread        " automaticaly reads file again after change
+
+" Status line
+set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [POS=%04l,%04v]\ [%p%%]\ [LEN=%L] "Shows detailed status line with formatting
+set laststatus=2  " Shows the status line
+
+
+"folding settings
+set foldmethod=indent   "fold based on indent
+set foldnestmax=10      "deepest fold is 10 levels
+set nofoldenable        "dont fold by default
+set foldlevel=1         "this is just what i use
+
+" Then you can toggle folding with za. You can fold everything with zM and unfold everything with zR. zm and zr can be used to get those folds just right. Always remember the almighty help file at “help :folding” if you get stuck.
+" http://smartic.us/2009/04/06/code-folding-in-vim/
+
+" Keystrokes to work with tabs - tabnext and tabprevious
+nnoremap <silent> <C-n> :tabnext<CR>
+nnoremap <silent> <C-p> :tabprevious<CR>
+nnoremap <silent> <C-S-t> :tabnew<CR>

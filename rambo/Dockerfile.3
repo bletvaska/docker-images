@@ -35,3 +35,6 @@ RUN sed -e "s/{{TITLE}}/${title}/g" \
         -e "s/{{PART}}/${part}/g" \
         -e "s|{{IMDB}}|${imdb}|g" \
         -i /usr/share/nginx/html/index.html
+
+# timeout nginx after 10 seconds
+CMD timeout -s 3 10 /usr/sbin/nginx "-g daemon off;"

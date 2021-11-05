@@ -305,7 +305,7 @@ def epub(ctx, _lectures=True, _year='2021'):
     path = Path(_year)
     file = open(path / f'metadata-{content_type}.yaml')
     metadata = yaml.load(file, Loader=yaml.Loader)
-    output = 'download/smart.lectures.2021.epub'
+    output = f'download/smart.lectures.{_year}.epub'
 
     # preprocess sources
     with console.status('[bold green] Preprocessing sources...') as status:
@@ -337,7 +337,7 @@ def epub(ctx, _lectures=True, _year='2021'):
                 ctx.run(f'rm _{source}')
 
     # print destination file
-    logging.info(f'Book was written to {output}.')
+    logging.info(f'Book was written to {_year}/{output}.')
 
 
 @task

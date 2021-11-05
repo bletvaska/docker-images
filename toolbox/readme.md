@@ -4,11 +4,37 @@ Set of Linux tools for (not only) container testing.
 
 Tools:
 
-* ping
-* curl
-* mtr
-* stress-ng
-* iputils
-* nmap
-* wget
+* `bash`
+* `bats`
+* `curl`
+* `git`
+* `httpie`
+* `iputils`
+* `jq`
+* `jsonschema`
+* `mtr`
+* `nmap`
+* `ping`
+* `shellcheck`
+* `sqlite`
+* `stress-ng`
+* `vim`
+* `wget`
+* `yq`
+
+
+## Running
+
+There are many tools preinstalled and also some configuration is provided too. Recommended way of using the _Toolbox_ is by creating an alias for your system:
+
+```bash
+alias toolbox='docker container run -it --rm --volume $(pwd):/home/work --user $(id -u ${USER}):$(id -g ${USER}) toolbox'
+```
+
+Because of that:
+
+* the `home` folder for the user is set to `/home`
+* there is configuration for `bash` and `vim` already in the `/home` folder
+* user's workdir is set to `/home/work/`
+
 
