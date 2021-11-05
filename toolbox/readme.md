@@ -28,7 +28,10 @@ Tools:
 There are many tools preinstalled and also some configuration is provided too. Recommended way of using the _Toolbox_ is by creating an alias for your system:
 
 ```bash
-alias toolbox='docker container run -it --rm --volume $(pwd):/home/work --user $(id -u ${USER}):$(id -g ${USER}) bletvaska/toolbox'
+alias toolbox='docker container run -it --rm \
+    --volume $(pwd):/home/work \
+    --user $(id -u ${USER}):$(id -g ${USER}) \
+    bletvaska/toolbox'
 ```
 
 Because of that:
