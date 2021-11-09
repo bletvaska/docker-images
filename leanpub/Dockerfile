@@ -18,16 +18,15 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposi
     && apk add --no-cache pandoc jekyll
 
 # install packages for jekyll
-RUN apk add --no-cache make gcc libc-dev g++
-RUN gem install jekyll-pandoc paru minima
-RUN apk del make gcc libc-dev g++
+RUN apk add --no-cache make gcc libc-dev g++ ruby-dev
+RUN gem install jekyll-pandoc paru minima webrick
+RUN apk del make gcc libc-dev g++ ruby-dev
 
 # install theme
 COPY jekyll-theme-nucky/ /tmp/jekyll-theme-nucky/
-RUN ls /tmp \
-    && cd /tmp/jekyll-theme-nucky \
+RUN cd /tmp/jekyll-theme-nucky \
     && gem build jekyll-theme-nucky.gemspec \
-    && gem install --local jekyll-theme-nucky-2021.09.gem \
+    && gem install --local jekyll-theme-nucky-2021.11.gem \
     && rm -rf /tmp/jekyll-theme-nucky
 
 #! TODO python, later replacement for pandoc filters in ruby

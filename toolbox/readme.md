@@ -1,8 +1,9 @@
 # Toolbox 
 
-Set of Linux tools for (not only) container testing.
+Set of Linux tools for (not only container) testing.
 
-Tools:
+
+## List of Installed Tools
 
 * `bash`
 * `bats`

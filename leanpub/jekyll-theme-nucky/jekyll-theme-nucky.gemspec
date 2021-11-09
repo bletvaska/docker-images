@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name          = "jekyll-theme-nucky"
-  spec.version       = "2021.09"
+  spec.version       = "2021.11"
   spec.authors       = ["Miroslav Biňas"]
   spec.email         = ["miroslav.binas@tuke.sk"]
 
@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.files         =  `find * -type f -print0`.split("\x0").select { |f| f.match(%r!^(assets|_layouts|_includes|_sass|LICENSE|README)!i) }
 
-  spec.add_runtime_dependency "jekyll", "~> 4.0"
+  spec.add_runtime_dependency "jekyll", "~> 4.2"
 
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 12.0"

@@ -308,13 +308,14 @@ def epub(ctx, _lectures=True, _year='2021'):
     output = f'download/smart.lectures.{_year}.epub'
 
     # preprocess sources
-    with console.status('[bold green] Preprocessing sources...') as status:
-        for source in metadata['sources']['epub']:
-            with open(path / f'_{source}', 'w') as f:
-                if content_type == 'lectures':
-                    f.write(_preprocess_lecture(ctx, path / source, 'html'))
-                else:
-                    f.write(_preprocess_labs(ctx, path / source))
+    # with console.status('[bold green] Preprocessing sources...') as status:
+    print('>> preprocessing sources...')
+    for source in metadata['sources']['epub']:
+        with open(path / f'_{source}', 'w') as f:
+            if content_type == 'lectures':
+                f.write(_preprocess_lecture(ctx, path / source, 'html'))
+            else:
+                f.write(_preprocess_labs(ctx, path / source))
 
     # prepare pandoc default params
     cmd = [
@@ -328,8 +329,10 @@ def epub(ctx, _lectures=True, _year='2021'):
         cmd.append(f'_{source}')
 
     # build epub
+    print('>> building epub...')
+    print(' '.join(cmd))
     with ctx.cd(_year):
-        with console.status('[bold green] Building epub...') as status:
+        # with console.status('[bold green] Building epub...') as status:
             ctx.run(' '.join(cmd), shell='/bin/sh')
 
             # cleanup
