@@ -36,6 +36,7 @@ $for(classoption)$
   $classoption$$sep$,
 $endfor$
 ]{$documentclass$}
+$if(thanks)$\thanks{$thanks$}$endif$
 $if(title)$\title{$title$}$endif$
 $if(identifier)$
 \isbn{$for(identifier)$$it.text$$endfor$}

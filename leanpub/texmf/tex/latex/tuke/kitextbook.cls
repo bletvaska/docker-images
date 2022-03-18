@@ -143,6 +143,10 @@
 	\gdef\@isbn{#1} % Store the ISBN in @isbn
 }
 
+\renewcommand{\thanks}[1]{
+    \gdef\@thanks{#1}
+}
+
 \renewcommand{\frontmatter}{%
     \cleardoublepage
     \pagestyle{empty}
@@ -303,6 +307,11 @@
         Obálku ilustrovala $\copyright${} Janka Slebodníková, \url{www.maranveart.com}. Ilustrácia bola prvýkrát publikovaná v komixoch autorky, ktoré vychádzali v rokoch 2014 až 2018 na stránkach portálu \url{www.root.cz}.
 
         \bigskip
+
+        \@thanks
+
+        \bigskip
+
 
         Toto autorské dielo podlieha medzinárodnej licencii \textit{Creative Commons BY-NC-SA 4.0}. To znamená, že:
 

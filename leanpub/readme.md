@@ -63,6 +63,19 @@ $ leanpub epub
 
 ### Building the PDF
 
+install following packages:
+
+```bash
+dnf install latexmk \
+    texlive-xetex \
+    texlive-pdfpages \
+    texlive-pageslts \
+    texlive-tex-gyre \
+    texlive-tcolorbox \
+    texlive-framed \
+    texlive-mdwtools
+```
+
 ```bash
 $ leanpub pdf
 $ latexmk -pdfxe -bibtex -pvc -shell-escape lectures.tex

@@ -22,6 +22,16 @@ RUN apk add --no-cache make gcc libc-dev g++ ruby-dev
 RUN gem install jekyll-pandoc paru minima webrick
 RUN apk del make gcc libc-dev g++ ruby-dev
 
+#! TODO python, later replacement for pandoc filters in ruby
+# gettext zip
+RUN apk add --no-cache python3 py3-pip py3-dotenv py3-requests py3-rich py3-jinja2 \
+    && ln -s /usr/bin/python3 /usr/bin/python \
+    && pip install --no-cache-dir panflute invoke pydantic python-frontmatter
+
+# invoke needs bash
+# zip and curl for deployment
+RUN apk add --no-cache bash # vim zip curl
+
 # install theme
 COPY jekyll-theme-nucky/ /tmp/jekyll-theme-nucky/
 RUN cd /tmp/jekyll-theme-nucky \
@@ -29,20 +39,10 @@ RUN cd /tmp/jekyll-theme-nucky \
     && gem install --local jekyll-theme-nucky-2021.11.gem \
     && rm -rf /tmp/jekyll-theme-nucky
 
-#! TODO python, later replacement for pandoc filters in ruby
-# gettext zip
-RUN apk add --no-cache python3 py3-pip py3-dotenv py3-requests py3-rich py3-jinja2 \
-    && ln -s /usr/bin/python3 /usr/bin/python \
-    && pip install --no-cache-dir panflute invoke pydantic python-frontmatter
-
 # experimental - texlive support
 # RUN apk add --no-cache texlive
 ENV TEXMFHOME=/texmf
 COPY texmf/ /texmf/
-
-# invoke needs bash
-# zip and curl for deployment
-RUN apk add --no-cache bash vim zip curl
 
 # environment variables
 ENV JEKYLL_ENV=development

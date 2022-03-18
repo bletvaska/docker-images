@@ -21,6 +21,11 @@ $(function(){
             });
 
             // format output
+            {% if include.format %}
+                span.text(
+                        event.strftime("{{ include.format }}")
+                );
+            {% else %}
             if(event.offset.totalDays == 0){
                 span.text(
                     event.strftime('%H:%M:%S')
@@ -38,6 +43,7 @@ $(function(){
                     event.strftime('%D dní %H:%M:%S')
                 );
             }
+            {% endif %}
 
             // append time to message
             $(this).append(span);
