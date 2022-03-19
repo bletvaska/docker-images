@@ -33,4 +33,3 @@ This image uses several environment variables:
 * `AIRFLOW_USER_ID` - The ID of the user the Airflow will run. This is useful to set the ID of your local user just to avoid the issues with the files, which will Airflow create. Default value is set to `1000`.
 * `AIRFLOW_USER` - The username to access the Web UI.
 * `AIRFLOW_PASSWORD` - The password to access the WEB UI.
-* `AIRFLOW_PACKAGES` - Install aditional system packages.

@@ -10,13 +10,6 @@ if [[ -f /airflow/requirements.txt ]]; then
 fi
 
 
-# runtime ubuntu package installation
-if [[ -n $AIRFLOW_PACKAGES ]]; then
-    echo "Installing additional system packages: ${AIRFLOW_PACKAGES}\n"
-    apt install -y "${AIRFLOW_PACKAGES}"
-fi
-
-
 # init environment
 if [[ "$1" = 'airflow' ]]; then
     # check if db is initialized
