@@ -1,5 +1,8 @@
 # Clock
 
-Simple digital clock rendered with `figlet`.
+Simple digital clock rendered with `figlet` based on `alpine` base image.
 
-File with the alpine mini root fs must be downloaded from https://alpinelinux.org/downloads/
+Clock script traps following signals:
+
+* `INTERRUPT` - signal nr `2`
+* `TERMINATE` - signal nr `15`
