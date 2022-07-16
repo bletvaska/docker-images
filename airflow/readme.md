@@ -1,11 +1,12 @@
-# Apacha Airflow Mini
+# Apache Airflow Mini
 
 This is my mini *Docker* image for my [Apache Airflow](https://airflow.apache.org/) course. It is created only from basic installation and configuration and by default it is running as `standalone`.
 
 
 ## Tags
 
-* [latest](https://github.com/bletvaska/docker-images/blob/master/airflow/Dockerfile)
+* [latest, 2.3.0](https://github.com/bletvaska/docker-images/blob/master/airflow/Dockerfile)
+* 2.2.4
 
 
 ## Running the Airflow

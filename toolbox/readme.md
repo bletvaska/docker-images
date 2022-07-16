@@ -8,6 +8,7 @@ Set of Linux tools for (not only container) testing.
 * `bash`
 * `bats`
 * `curl`
+* `dgoss`
 * `git`
 * `httpie`
 * `iputils`
@@ -19,6 +20,7 @@ Set of Linux tools for (not only container) testing.
 * `shellcheck`
 * `sqlite`
 * `stress-ng`
+* `tmux`
 * `vim`
 * `wget`
 * `yq`
