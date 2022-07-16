@@ -1,6 +1,6 @@
 # Weather App
 
-Simple Weather app for my Docker 101 course.
+Simple Weather app for my Docker 101 course. The info is taken from openweathermap.org.
 
 
 ## Environment Variables
