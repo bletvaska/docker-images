@@ -2,6 +2,10 @@
 
 Simple Weather app for my Docker 101 course. The info is taken from openweathermap.org.
 
+## Tags
+
+* [`latest`](https://github.com/bletvaska/docker-images/blob/master/weather/Dockerfile), [`2022.01`](https://github.com/bletvaska/docker-images/blob/master/weather/Dockerfile)
+
 
 ## Environment Variables
 
