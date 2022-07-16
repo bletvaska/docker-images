@@ -23,7 +23,7 @@ RUN adduser --no-create-home --disabled-password --gecos "" mrilko \
     && cd /tmp/ \
     && apt update \
     && apt upgrade \
-    && apt install -y procps \
+    && apt install -y --no-install-recommends procps \
     && /usr/local/bin/python -m pip install --upgrade pip \
     && pip install *whl \
     && pip cache purge \
