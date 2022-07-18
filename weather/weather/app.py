@@ -1,18 +1,30 @@
 #!/usr/bin/env python3
 
 import logging
-from time import sleep
 import time
+import os
 
 import requests
+from rich.logging import RichHandler
 
 from .models import get_settings
 from . import __version__
 
+
 url_openweathermap = "http://api.openweathermap.org/data/2.5/weather?units={units}&q={query}&lang={language}&appid={token}"
 
+# setup logging
+logging.basicConfig(
+    format="%(name)s  %(message)s",
+    handlers=[RichHandler(
+        show_path=False,
+        omit_repeated_times=False,
+        markup=True,
+        )],
+    datefmt="%Y-%m-%d %X"
+)
+
 logger = logging.getLogger("weather")
-logging.basicConfig(format="%(asctime)s  %(name)s  %(levelname)5s: %(message)s")
 
 
 def main():
@@ -26,34 +38,57 @@ def main():
         logger.setLevel(logging.INFO)
 
     logger.info(
-        f"Weather Checker {__version__} is running in {settings.environment.upper()} environment with update interval {settings.update_interval} secs."
+        f"Weather Checker [bold cyan]{__version__}[/] is running in [bold green]{settings.environment.upper()}[/] environment."
+    )
+    logger.info(
+        f'Weather conditions will be retrieved for "[bold yellow]{settings.query.capitalize()}[/]" every '
+        f"[bold cyan]{settings.update_interval}[/] seconds.",
+        extra={'highlighter': None}
     )
     logger.debug(settings)
 
     while True:
-        # get weather data
-        logger.debug("Requesting forecast...")
-        url = url_openweathermap.format(**settings.dict())
-        response = requests.get(url)
+        try:
+            # get weather data
+            logger.debug("Requesting forecast...")
+            url = url_openweathermap.format(**settings.dict())
+            response = requests.get(url)
 
-        # get data from service
-        data = response.json()
-        logger.debug("Received data:")
-        logger.debug(data)
+            # check status code
+            if response.status_code != 200:
+                raise requests.exceptions.RequestException('Wrong response.')
 
-        # format dt
-        dt_str = time.strftime(settings.dt_format, time.gmtime(data["dt"]))
+            # get data from service
+            data = response.json()
+            logger.debug("Received data:")
+            logger.debug(data)
 
-        # log messages
-        unit = "°C" if settings.units == "metric" else "K"
-        logger.info(
-            f'Last update for {data["name"]} ({data["sys"]["country"]}) at: {dt_str}'
-        )
-        logger.info(
-            f'temp={data["main"]["temp"]}{unit} pressure={data["main"]["pressure"]}hPa humidity={data["main"]["humidity"]}%'
-        )
+            # format dt
+            dt_str = time.strftime(settings.dt_format, time.gmtime(data["dt"]))
 
-        sleep(settings.update_interval)
+            # log messages
+            unit = "°C" if settings.units == "metric" else "K"
+            logger.info(
+                f'Last update for [bold yellow]{data["name"]} ({data["sys"]["country"]})[/] at: [bold purple]{dt_str}[/]',
+                extra={'highlighter': None}
+            )
+            logger.info(f'It\'s [bold green]{data["weather"][0]["description"]}[/].')
+            logger.info(
+                f'temp=[bold cyan]{data["main"]["temp"]}[/]{unit} '
+                f'pressure=[bold cyan]{data["main"]["pressure"]}[/]hPa '
+                f'humidity=[bold cyan]{data["main"]["humidity"]}[/]%',
+                extra={'highlighter': None}
+            )
+
+        except requests.exceptions.RequestException as ex:
+            data = response.json()
+            logger.error(f'HTTP Status Code: {response.status_code}')
+            logger.error(data["message"])
+
+        except Exception as ex:
+            logger.exception(ex)
+
+        time.sleep(settings.update_interval)
 
 
 if __name__ == "__main__":
