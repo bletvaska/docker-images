@@ -6,12 +6,11 @@ LABEL dockerhub="https://hub.docker.com/r/bletvaska/toolbox"
 LABEL github="https://github.com/bletvaska/docker-images/tree/master/toolbox"
 
 # todo: do we need git? 
-        #docker-cli \
 RUN apk update \
     && apk add --no-cache \
         bash \
-        bats \
         curl \
+        docker-cli \
         httpie \
         iputils \
         jq \
@@ -26,11 +25,13 @@ RUN apk update \
         tmux \
         vim \
         wget \
-        yq 
-
+        yq \
+    && apk add --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/ \
+        bats \
+        sqlmap
 
 # install dgoss
-#RUN curl -fsSL https://goss.rocks/install | sh
+RUN curl -fsSL https://goss.rocks/install | sh
 
 # create home environment
 ENV HOME="/home"

@@ -12,7 +12,7 @@ if [[ -f /airflow/requirements.txt ]]; then
     # show content of packages going to be installed
     echo "Installing additional packages based on requirements.txt file:"
     cat /airflow/requirements.txt
-    echo 
+    echo
 
     # install packages
     pip install -r /airflow/requirements.txt
@@ -41,3 +41,4 @@ fi
 
 # exec
 exec "$@"
+

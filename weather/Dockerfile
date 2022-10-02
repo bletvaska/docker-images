@@ -31,6 +31,6 @@ RUN adduser --no-create-home --disabled-password --gecos "" mrilko \
     && rm -rf *whl
 
 USER mrilko
-ENV COLUMNS=120
+# ENV COLUMNS=120
 
 CMD [ "weather" ]
