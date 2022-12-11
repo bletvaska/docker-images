@@ -1,9 +1,10 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from sqlmodel import SQLModel, Field
 
 
-class Weather(BaseModel):
+class Weather(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
     temp: float
     sunset: datetime
     sunrise: datetime

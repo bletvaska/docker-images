@@ -24,7 +24,7 @@
             <div class="card p-4">
 
                 <div class="d-flex">
-                    <h6 class="flex-grow-1">{{ city }} ({{ country }})</h6>
+                    <h6 class="flex-grow-1">{{ city }} ({{ country.upper() }})</h6>
                     <h6>{{ ts.strftime('%H:%M') }} UTC</h6>
                 </div>
 

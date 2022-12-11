@@ -4,6 +4,7 @@ from pydantic import BaseSettings, validator
 
 
 class Settings(BaseSettings):
+    db_uri: str = "sqlite:///db.sqlite"
     token = "08f5d8fd385c443eeff6608c643e0bc5"
     environment = "production"
     units = "metric"
@@ -97,15 +98,7 @@ class Settings(BaseSettings):
         if value.lower() in ("development", "dev", "devel"):
             return "development"
 
-        if value.lower() in (
-            "production",
-            "prod",
-        ):
+        if value.lower() in ("production", "prod"):
             return "production"
 
         raise ValueError("Invalid environment. Should be DEVELOPMENT or PRODUCTION.")
-
-
-# @lru_cache
-# def get_settings() -> Settings:
-#     return Settings()

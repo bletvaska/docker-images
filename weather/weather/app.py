@@ -4,15 +4,18 @@ from pathlib import Path
 
 import requests
 from loguru import logger
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi_utils.tasks import repeat_every
 import uvicorn
+from sqlmodel import create_engine, SQLModel
 from starlette.staticfiles import StaticFiles
-from starlette.templating import Jinja2Templates
 
-from weather.dependencies import get_settings
+from weather.dependencies import get_settings, get_session
 from weather.models.weather import Weather
-from . import __version__
+from . import __version__, views
+
+# create settings object
+settings = get_settings()
 
 # enable additional colors in logger
 logger = logger.opt(colors=True)  # ansi?
@@ -23,39 +26,17 @@ logger.add(sys.stdout,
 
 # setup app
 app = FastAPI()
-settings = get_settings()
 app.mount("/static", StaticFiles(directory=Path(__file__).parent / "static"), name="static")
-templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
+app.include_router(views.router)
 
-# some globals
-# TODO override this
-weather = None
-
-
-@app.get('/settings')
-def get_settings():
-    return settings
-
-
-@app.get('/weather')
-def get_weather():
-    global weather
-    return weather.dict()
-
-
-@app.get("/")
-async def homepage(request: Request):
-    global weather
-    context = {"request": request}
-    context.update(weather.dict())
-    context['refresh'] = settings.update_interval
-
-    return templates.TemplateResponse("homepage.html", context)
+# init db
+engine = create_engine(get_settings().db_uri)
+SQLModel.metadata.create_all(engine)
 
 
 @app.on_event("startup")
 @repeat_every(seconds=settings.update_interval)
-def retrieve_weather_data(*args, **kwargs) -> None:
+def retrieve_weather_data() -> None:
     payload = {
         'units': settings.units,
         'q': settings.query,
@@ -75,10 +56,9 @@ def retrieve_weather_data(*args, **kwargs) -> None:
 
         # get data from service
         data = response.json()
-        logger.debug("Received data:")
+        logger.debug("Retrieved data:")
         logger.debug(data)
 
-        global weather
         weather = Weather.from_dict(data)
 
         # format dt
@@ -96,6 +76,11 @@ def retrieve_weather_data(*args, **kwargs) -> None:
             f'humidity: <light-cyan>{weather.humidity}</light-cyan>%'
         )
 
+        # insert to db
+        session = next(get_session())
+        session.add(weather)
+        session.commit()
+
     except requests.exceptions.RequestException as ex:
         data = response.json()
         logger.error(f'HTTP Status Code: {response.status_code}')
@@ -106,8 +91,6 @@ def retrieve_weather_data(*args, **kwargs) -> None:
 
 
 def main():
-    # create settings
-    # settings = get_settings()
     logger.debug(settings)
 
     logger.info(f"Weather Checker <cyan>{__version__}</cyan> is running in "
