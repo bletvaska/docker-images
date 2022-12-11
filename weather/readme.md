@@ -9,6 +9,13 @@ Simple Weather app for my Docker 101 course. The info is taken from openweatherm
   , [`2022.01`](https://github.com/bletvaska/docker-images/blob/master/weather/Dockerfile)
 
 
+## Running the App
+
+```bash
+$ python -m weather.app
+```
+
+
 ## Environment Variables
 
 Application can be controlled with following environment variables:
