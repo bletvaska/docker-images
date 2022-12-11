@@ -24,6 +24,17 @@ def get_weather(session: Session = Depends(get_session)):
     return weather
 
 
+@router.get('/history')
+def get_history(session: Session = Depends(get_session), format: str = 'json'):
+    # select all records from db
+    statement = select(Weather)
+    data = session.exec(statement).all()
+
+    # prepare output format
+
+    return data
+
+
 @router.get("/")
 async def homepage(request: Request, settings: Settings = Depends(get_settings),
                    templates: Jinja2Templates = Depends(get_templates), session: Session = Depends(get_session)):

@@ -1,4 +1,6 @@
-__pychache__/
+__pycache__/
 poetry.lock
 .vscode/
 dist/
+db.sqlite
+.idea/
