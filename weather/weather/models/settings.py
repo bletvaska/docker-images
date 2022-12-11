@@ -106,6 +106,6 @@ class Settings(BaseSettings):
         raise ValueError("Invalid environment. Should be DEVELOPMENT or PRODUCTION.")
 
 
-@lru_cache
-def get_settings() -> Settings:
-    return Settings()
+# @lru_cache
+# def get_settings() -> Settings:
+#     return Settings()

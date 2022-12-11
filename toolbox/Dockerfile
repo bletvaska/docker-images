@@ -19,6 +19,7 @@ RUN apk update \
         nmap \
         py3-setuptools \
         py3-jsonschema \
+        py3-rich \
         shellcheck \
         sqlite \
         stress-ng \

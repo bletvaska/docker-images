@@ -19,8 +19,8 @@ Set of Linux tools for (not only container) testing.
 * `ping`
 * `shellcheck`
 * `sqlite`
-* `stress-ng`
-* `tmux`
+* [`stress-ng`](https://github.com/ColinIanKing/stress-ng)
+* [`tmux`](https://github.com/tmux/tmux/wiki)
 * `vim`
 * `wget`
 * `yq`

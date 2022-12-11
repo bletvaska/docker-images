@@ -10,7 +10,7 @@ RUN mkdir /wheels/ \
 COPY dist/*whl /wheels/
 
 RUN pip wheel --wheel-dir=/wheels/ \
-    weather-1.2.0-py3-none-any.whl
+    weather-2.0.0-py3-none-any.whl
 
 
 FROM python:3.10-slim-bullseye AS base
@@ -25,12 +25,13 @@ RUN adduser --no-create-home --disabled-password --gecos "" mrilko \
     && apt upgrade \
     && apt install -y --no-install-recommends procps \
     && /usr/local/bin/python -m pip install --upgrade pip \
-    && pip install rich \
     && pip install *whl \
     && pip cache purge \
     && rm -rf *whl
 
 USER mrilko
 # ENV COLUMNS=120
+
+EXPOSE 8000
 
 CMD [ "weather" ]

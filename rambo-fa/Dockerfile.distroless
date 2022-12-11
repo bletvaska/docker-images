@@ -1,0 +1,16 @@
+FROM python:slim-bullseye AS builder
+
+COPY dist/rambo-2022.1-py3-none-any.whl /build/
+
+RUN python3 -m venv /venv \
+    && /venv/bin/pip3 install --no-cache-dir --upgrade pip /build/rambo-2022.1-py3-none-any.whl
+
+
+FROM gcr.io/distroless/python3-debian11
+COPY --from=builder /venv/ /venv/
+
+ENV PYTHONPATH=/venv/lib/python3.10/site-packages
+
+EXPOSE 8000
+
+CMD [ "-m", "rambo" ]

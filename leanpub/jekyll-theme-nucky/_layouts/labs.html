@@ -11,12 +11,14 @@ layout: default
 </div>
 
 <div class="container">
-{% if page.video %}
+{% if page.videos %}
 <h2>Video pre cvičenie</h2>
 
-<figure class="video_container embed-responsive embed-responsive-16by9">
-    <iframe class="embed-responsive-item" src="{{ page.video }}" allowfullscreen="true"></iframe>
+{% for video in page.videos: %}
+<figure class="video_container embed-responsive embed-responsive-16by9 w-50 d-inline-block">
+    <iframe class="embed-responsive-item" src="{{ video }}" allowfullscreen="true"></iframe>
 </figure>
+{% endfor %}
 {% endif %}
 
 {{ content }}
