@@ -13,24 +13,70 @@
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/weather-icons.min.css">
     <link rel="stylesheet" href="/static/css/weather-icons-wind.min.css">
+    <style>
+      body {
+        background-image: url("/static/images/bitday.{{ '%02d' % background_nr }}.png");
+      }
+    </style>
 
     <title>Weather App</title>
 </head>
 <!--https://bbbootstrap.com/snippets/bootstrap-weather-info-template-19939290-->
 <body>
-<div class="container-fluid">
+
+<div class="container-fluid box">
+  <div id="now" class="row justify-content-center">
+    {{ now.strftime('%H:%M') }}
+  </div>
+
+  <div id="date" class="row justify-content-center">
+    {{ now.strftime('%d. %B. %Y') }}
+  </div>
+
+  <div id="sun" class="row justify-content-center">
+    <span title="Sunrise at {{ weather.sunrise.strftime("%H:%M:%S") }}"><i class="wi wi-sunrise"></i> {{ weather.sunrise.strftime("%H:%M:%S") }}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+    <span title="Sunset at {{ weather.sunset.strftime("%H:%M:%S") }}"><i class="wi wi-sunset"></i> {{ weather.sunset.strftime("%H:%M:%S") }}</span>
+  </div>
+</div>
+
+<div id="version">
+  {{ version }}@{{ environment }}
+</div>
+
+<div id="city">
+  <a href="https://www.google.com/maps/search/?api=1&query={{ weather.latitude }},{{ weather.longitude }}">
+    <i class="bi bi-geo-alt"></i>{{ weather.city }}, {{ weather.country.upper() }}
+  </a>
+  <div id="measurement" class="row justify-content-center">
+    <span title="Current temperature is {{ weather.temp }}&deg;C"><i class="wi wi-thermometer"></i> {{ weather.temp }}&deg;C</span>&nbsp;&nbsp;
+    <span title="Current humidity is {{ weather.humidity }}&deg;C"><i class="wi wi-humidity"></i> {{ weather.humidity }}%</span>&nbsp;&nbsp;
+    <span title="Current pressure is {{ weather.pressure }}hPa"><i class="wi wi-barometer"></i> {{ weather.pressure }}hPa</span>
+  </div>
+</div>
+
+<div class="d-flex flex-column">
+  <div id="credits" class="d-flex justify-content-center">
+    hello world
+  </div>
+</div>
+
+
+
+
+
+<div class="container-fluid d-none">
     <div class="row justify-content-center">
         <div class="col-12 col-md-4 col-sm-12 col-xs-12">
             <div class="card p-4">
 
                 <div class="d-flex">
-                    <h6 class="flex-grow-1">{{ city }} ({{ country.upper() }})</h6>
-                    <h6>{{ ts.strftime('%H:%M') }} UTC</h6>
+                    <h6 class="flex-grow-1">{{ city }} ({{ weather.country.upper() }})</h6>
+                    <h6>{{ weather.ts.strftime('%H:%M') }} UTC</h6>
                 </div>
 
                 <div class="d-flex flex-column temp mt-5 mb-3">
-                    <h1 class="mb-0 font-weight-bold" id="heading"> {{ temp }} &deg;C </h1>
-                    <span class="small grey">{{ desc }}</span>
+                    <h1 class="mb-0 font-weight-bold" id="heading"> {{ weather.temp }} &deg;C </h1>
+                    <span class="small grey">{{ weather.desc }}</span>
                 </div>
 
                 <div class="d-flex">
@@ -38,24 +84,24 @@
                         <p class="my-1">
 <!--                            <i class="bi bi-wind"></i>-->
                             <i class="wi wi-strong-wind"></i>
-                            <span> {{ wind_speed }} m/s  </span>
+                            <span> {{ weather.wind_speed }} m/s  </span>
                         </p>
 
                         <p class="my-1">
 <!--                            <i class="bi bi-droplet-fill"></i>-->
                             <i class="wi wi-humidity"></i>
-                            <span> {{ humidity }}% </span>
+                            <span> {{ weather.humidity }}% </span>
                         </p>
 
                         <p class="my-1">
 <!--                            <i class="bi bi-sunrise"></i>-->
                             <i class="wi wi-sunrise"></i>
-                            <span> {{ sunrise.strftime('%H:%M:%S') }} </span>
+                            <span> {{ weather.sunrise.strftime('%H:%M:%S') }} </span>
                         </p>
                     </div>
 
                     <div class="weather-icon">
-                        <i class="wi wi-owm-{{ weather_id }}"></i>
+                        <i class="wi wi-owm-{{ weather.weather_id }}"></i>
                     </div>
                 </div>
             </div>

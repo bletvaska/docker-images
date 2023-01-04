@@ -4,14 +4,15 @@ from pathlib import Path
 
 import requests
 from loguru import logger
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi_utils.tasks import repeat_every
 import uvicorn
 from sqlmodel import create_engine, SQLModel
 from starlette.staticfiles import StaticFiles
 
-from weather.dependencies import get_settings, get_session
-from weather.models.weather import Weather
+from .middleware import AccessLog, AddProcessTimeHeader
+from .dependencies import get_settings, get_session
+from .models.measurement import Measurement
 from . import __version__, views
 
 # create settings object
@@ -22,10 +23,12 @@ logger = logger.opt(colors=True)  # ansi?
 logger.remove()
 logger.add(sys.stdout,
            format="<light-green>{time:YYYY-MM-DD HH:mm:ss}</light-green> <lw>{level:8}</lw> {message}",
-           level='DEBUG')
+           level=settings.log_level)
 
 # setup app
 app = FastAPI()
+app.add_middleware(AccessLog)
+app.add_middleware(AddProcessTimeHeader)
 app.mount("/static", StaticFiles(directory=Path(__file__).parent / "static"), name="static")
 app.include_router(views.router)
 
@@ -37,6 +40,10 @@ SQLModel.metadata.create_all(engine)
 @app.on_event("startup")
 @repeat_every(seconds=settings.update_interval)
 def retrieve_weather_data() -> None:
+    if settings.token is None:
+        logger.error('No API key is provided. Check app settings.')
+        return
+
     payload = {
         'units': settings.units,
         'q': settings.query,
@@ -59,7 +66,7 @@ def retrieve_weather_data() -> None:
         logger.debug("Retrieved data:")
         logger.debug(data)
 
-        weather = Weather.from_dict(data)
+        weather = Measurement.from_dict(data)
 
         # format dt
         dt_str = time.strftime(settings.dt_format, time.gmtime(data["dt"]))
@@ -99,7 +106,9 @@ def main():
     logger.info(f'Weather conditions will be retrieved for "<yellow>{settings.query.capitalize()}</yellow>" every '
                 f"<cyan>{settings.update_interval}</cyan> seconds.")
 
-    uvicorn.run('weather.app:app', host='0.0.0.0', reload=True)  # , log_level='critical')
+    logger.info(f'Current Timezone is set to <green>{settings.timezone}</green>.')
+
+    uvicorn.run('weather.app:app', host='0.0.0.0', reload=True, log_level='critical')
 
 
 if __name__ == '__main__':

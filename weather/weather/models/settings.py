@@ -1,22 +1,29 @@
-from functools import lru_cache
-
 from pydantic import BaseSettings, validator
+import pendulum
 
 
 class Settings(BaseSettings):
     db_uri: str = "sqlite:///db.sqlite"
-    token = "08f5d8fd385c443eeff6608c643e0bc5"
+    token: str | None = None
     environment = "production"
     units = "metric"
     query = "kosice,sk"
     update_interval = 60
     language = "en"
     dt_format = "%Y-%m-%dT%H:%M:%SZ"
+    log_level = 'INFO'
+    timezone = 'UTC'
 
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
         env_prefix = "weather_"
+
+    @validator('timezone')
+    def validate_timezone(cls, value):
+        if value not in pendulum.timezones:
+            raise ValueError('Invalid Timezone.')
+        return value
 
     @validator("units")
     def validate_units(cls, value):
@@ -102,3 +109,10 @@ class Settings(BaseSettings):
             return "production"
 
         raise ValueError("Invalid environment. Should be DEVELOPMENT or PRODUCTION.")
+
+    @validator('log_level')
+    def validate_log_level(cls, value):
+        if value.upper() in ('DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'):
+            return value.upper()
+
+        raise ValueError('Invalid log level. Must be one of DEBUG, INFO, WARNING, ERROR or CRITICAL.')

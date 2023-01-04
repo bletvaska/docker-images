@@ -1,4 +1,4 @@
-FROM python:3.10-slim-bullseye AS builder
+FROM python:3.11-slim-bullseye AS builder
 
 RUN apt update \
     && apt upgrade \
@@ -13,13 +13,14 @@ RUN pip wheel --wheel-dir=/wheels/ \
     weather-2.0.0-py3-none-any.whl
 
 
-FROM python:3.10-slim-bullseye AS base
+FROM python:3.11-slim-bullseye AS base
 LABEL maintainer="mirek <mirek@cnl.sk>"
 LABEL description="Simple weather checker as simple app example for Docker 101 course."
 
 COPY --from=builder /wheels/*whl /tmp/
 
 RUN adduser --no-create-home --disabled-password --gecos "" mrilko \
+    && mkdir /app && chown mrilko.mrilko /app \
     && cd /tmp/ \
     && apt update \
     && apt upgrade \
@@ -30,8 +31,9 @@ RUN adduser --no-create-home --disabled-password --gecos "" mrilko \
     && rm -rf *whl
 
 USER mrilko
-# ENV COLUMNS=120
 
 EXPOSE 8000
+
+WORKDIR /app
 
 CMD [ "weather" ]

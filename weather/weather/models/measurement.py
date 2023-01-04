@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlmodel import SQLModel, Field
 
 
-class Weather(SQLModel, table=True):
+class Measurement(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     temp: float
     sunset: datetime
@@ -19,9 +19,11 @@ class Weather(SQLModel, table=True):
     humidity: int
     wind_speed: float
     wind_deg: int
+    latitude: float
+    longitude: float
 
     @classmethod
-    def from_dict(cls, data: dict) -> "Weather":
+    def from_dict(cls, data: dict) -> "Measurement":
         return cls(
             temp=data["main"]["temp"],
             temp_min=data["main"]["temp_min"],
@@ -37,4 +39,6 @@ class Weather(SQLModel, table=True):
             humidity=data['main']['humidity'],
             wind_speed=data['wind']['speed'],
             wind_deg=data['wind']['deg'],
+            latitude=data['coord']['lat'],
+            longitude=data['coord']['lon'],
         )
