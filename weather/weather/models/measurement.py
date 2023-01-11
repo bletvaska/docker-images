@@ -1,4 +1,5 @@
 from datetime import datetime
+from sqladmin import ModelView
 
 from sqlmodel import SQLModel, Field
 
@@ -42,3 +43,7 @@ class Measurement(SQLModel, table=True):
             latitude=data['coord']['lat'],
             longitude=data['coord']['lon'],
         )
+
+
+class MeasurementAdmin(ModelView, model=Measurement):
+    column_list = [Measurement.ts, Measurement.city, Measurement.country, Measurement.sunset, Measurement.sunrise, Measurement.temp, Measurement.humidity, Measurement.pressure]

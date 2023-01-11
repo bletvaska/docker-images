@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     dt_format = "%Y-%m-%dT%H:%M:%SZ"
     log_level = 'INFO'
     timezone = 'UTC'
+    theme = 'bitday'
 
     class Config:
         env_file = ".env"

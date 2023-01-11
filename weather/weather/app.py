@@ -1,18 +1,20 @@
 import sys
 import time
 from pathlib import Path
+from fastapi_health import health
 
 import requests
 from loguru import logger
-from fastapi import FastAPI, Request
+from fastapi import Depends, FastAPI, Request
 from fastapi_utils.tasks import repeat_every
+from sqladmin import Admin
 import uvicorn
 from sqlmodel import create_engine, SQLModel
 from starlette.staticfiles import StaticFiles
 
 from .middleware import AccessLog, AddProcessTimeHeader
 from .dependencies import get_settings, get_session
-from .models.measurement import Measurement
+from .models.measurement import Measurement, MeasurementAdmin
 from . import __version__, views
 
 # create settings object
@@ -22,7 +24,7 @@ settings = get_settings()
 logger = logger.opt(colors=True)  # ansi?
 logger.remove()
 logger.add(sys.stdout,
-           format="<light-green>{time:YYYY-MM-DD HH:mm:ss}</light-green> <lw>{level:8}</lw> {message}",
+           format="<light-green>{time:YYYY-MM-DD HH:mm:ss}</light-green> <lw><level>{level:8}</level></lw> <level>{message}</level>",
            level=settings.log_level)
 
 # setup app
@@ -35,6 +37,19 @@ app.include_router(views.router)
 # init db
 engine = create_engine(get_settings().db_uri)
 SQLModel.metadata.create_all(engine)
+
+# admin ui
+admin = Admin(app, engine)
+admin.add_view(MeasurementAdmin)
+
+# healthcheck
+def is_database_online(session: bool = Depends(get_session)):
+    return session
+
+def is_healthy():
+    return not Path('unhealthy').exists()
+
+app.add_api_route("/healthz", health([is_database_online, is_healthy]))
 
 
 @app.on_event("startup")
@@ -108,7 +123,7 @@ def main():
 
     logger.info(f'Current Timezone is set to <green>{settings.timezone}</green>.')
 
-    uvicorn.run('weather.app:app', host='0.0.0.0', reload=True, log_level='critical')
+    uvicorn.run('weather.app:app', host='0.0.0.0', reload=True, log_level='error')
 
 
 if __name__ == '__main__':

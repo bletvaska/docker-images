@@ -21,7 +21,7 @@ class AccessLog(BaseHTTPMiddleware):
         status = HTTPStatus(response.status_code).name.replace("_", " ").title()
         logger.info(
             f"{request.client.host}:{request.client.port} "
-            f"{request.method} {request.url.path} <light-green>{response.status_code} {status}</light-green>"
+            f"{request.method} {request.url.path} <light-magenta>{response.status_code} {status}</light-magenta>"
         )
 
         return response

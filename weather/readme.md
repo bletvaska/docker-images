@@ -6,7 +6,8 @@ Simple Weather app for my Docker 101 course. The info is taken from openweatherm
 ## Tags
 
 * [`latest`](https://github.com/bletvaska/docker-images/blob/master/weather/Dockerfile)
-  , [`2022.01`](https://github.com/bletvaska/docker-images/blob/master/weather/Dockerfile)
+  , [`2023.1`](https://github.com/bletvaska/docker-images/blob/master/weather/Dockerfile)
+* [`2022.1`](https://github.com/bletvaska/docker-images/blob/master/weather/Dockerfile)
 
 
 ## Running the App
@@ -15,6 +16,11 @@ Simple Weather app for my Docker 101 course. The info is taken from openweatherm
 $ python -m weather.app
 ```
 
+## Running the App in Container
+
+```bash
+$ docker container run --port 8000:8000 bletvaska/weather
+```
 
 ## Environment Variables
 
@@ -30,6 +36,7 @@ Application can be controlled with following environment variables:
 * `WEATHER_DT_FORMAT` - Format of time and date. Currently set to ISO 8601 format (`"%Y-%m-%dT%H:%M:%SZ"`).
 * `WEATHER_DB_URI` - Connection string for database according to
   [SQLAlchemy](https://docs.sqlalchemy.org/en/20/core/engines.html#database-urls) documentation
+* `WEATHER_THEME` - Theme selection. Possible values are `bitday` (default)
 
 
 ## Available URLs
@@ -37,13 +44,13 @@ Application can be controlled with following environment variables:
 | endpoint    | method | description                   | content type       |
 |-------------|--------|-------------------------------|--------------------|
 | `/`         | `GET`  | homepage                      | `text/html`        |
+| `/history`  | `GET`  | returns all records from db   | `application/json` |
+| `/admin`    | `GET`  | SQL Admin web page            | `text/html`        |
 | `/settings` | `GET`  | list of current settings      | `application/json` |
 | `/weather`  | `GET`  | current weather               | `application/json` |
-| `/history`  | `GET`  | returns all records from db   | `application/json` |
 
 
 ## Stolen Stuff
 
 * icons: https://erikflowers.github.io/weather-icons/
-* template: https://bbbootstrap.com/snippets/bootstrap-weather-info-template-19939290
-* background image: https://bing.gifposter.com/column-298-commemorating-peace-in-antarctica.html
+* background images: bitday project
