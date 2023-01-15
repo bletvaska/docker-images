@@ -123,7 +123,7 @@ def main():
 
     logger.info(f'Current Timezone is set to <green>{settings.timezone}</green>.')
 
-    uvicorn.run('weather.app:app', host='0.0.0.0', reload=True, log_level='error')
+    uvicorn.run('weather.app:app', host='0.0.0.0', reload=True)  # log_level='error',
 
 
 if __name__ == '__main__':

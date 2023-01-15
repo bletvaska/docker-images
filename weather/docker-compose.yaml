@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  weather:
+    build: .
+    # image: bletvaska/weather
+    ports:
+    - 8000:8000
+    environment:
+    - WEATHER_QUERY=poprad

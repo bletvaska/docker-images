@@ -44,10 +44,18 @@ Application can be controlled with following environment variables:
 | endpoint    | method | description                   | content type       |
 |-------------|--------|-------------------------------|--------------------|
 | `/`         | `GET`  | homepage                      | `text/html`        |
+| `/healthz`  | `GET`  | healthcheck                   | `application/json` |
 | `/history`  | `GET`  | returns all records from db   | `application/json` |
 | `/admin`    | `GET`  | SQL Admin web page            | `text/html`        |
 | `/settings` | `GET`  | list of current settings      | `application/json` |
 | `/weather`  | `GET`  | current weather               | `application/json` |
+
+
+## Healthcheck
+
+When healthy, HTTP status code `200` is returned. When unhealthy, then `503` is returned.
+
+To make service unhealthy, simply create empty file with name `unhealthy` in workdir (`/app`').
 
 
 ## Stolen Stuff

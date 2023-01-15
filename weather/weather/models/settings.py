@@ -1,9 +1,10 @@
-from pydantic import BaseSettings, validator
+from pydantic import BaseSettings, validator, AnyHttpUrl
 import pendulum
 
 
 class Settings(BaseSettings):
     db_uri: str = "sqlite:///db.sqlite"
+    base_url: AnyHttpUrl = 'http://localhost:8000'
     token: str | None = None
     environment = "production"
     units = "metric"

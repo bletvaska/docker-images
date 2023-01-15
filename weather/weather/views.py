@@ -49,6 +49,7 @@ def homepage(request: Request, settings: Settings = Depends(get_settings),
     # prepare context
     context = {
         "request": request,
+        "base_url": settings.base_url,
         "refresh": settings.update_interval,
         "version": __version__,
         "environment": settings.environment,

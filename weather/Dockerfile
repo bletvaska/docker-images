@@ -10,7 +10,7 @@ RUN mkdir /wheels/ \
 COPY dist/*whl /wheels/
 
 RUN pip wheel --wheel-dir=/wheels/ \
-    weather-2023.1-py3-none-any.whl
+    weather-2023.2-py3-none-any.whl
 
 
 FROM python:3.11-slim-bullseye AS base
@@ -40,6 +40,6 @@ EXPOSE 8000
 
 WORKDIR /app
 
-VOLUME [ "/app/templates" ]  # , "./config", "./measurements", "cache" ]
+VOLUME [ "/app" ]  # , "themes", "./config", "./measurements", "cache" ]
 
 CMD [ "weather" ]
