@@ -1,10 +1,53 @@
 version: '3'
 
 services:
-  weather:
-    build: .
-    # image: bletvaska/weather
+
+  traefik:
+    image: traefik:2.10
+    # Enables the web UI and tells Traefik to listen to docker
+    command:
+      # Configuration
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+
+      # Entrypoints
+      - "--entrypoints.mqtt.address=:1883"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+    restart: always
     ports:
-    - 8000:8000
+      # The HTTP and HTTPS port
+      - 80:80
+#      - 443:443
+      # The Web UI (enabled by --api.insecure=true)
+      - 9000:8080
+      # MQTT
+#      - 1883:1883
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  weather:
+    build:
+      dockerfile: Dockerfile.dev
+
+    # image: bletvaska/weather
+#    ports:
+#    - 8000:8000
     environment:
     - WEATHER_QUERY=poprad
+#    volumes:
+#      -
+    labels:
+      # traefik
+      traefik.enable: true
+      traefik.http.services.weather.loadbalancer.server.port: 8000
+
+      # middleware
+      traefik.http.middlewares.weather-rewrite.replacepathregex.regex: "^/weather/(.*)"
+      traefik.http.middlewares.weather-rewrite.replacepathregex.replacement: "/$$1"
+
+      # routers
+      traefik.http.routers.weather.rule: PathPrefix(`/weather`)
+      traefik.http.routers.weather.entrypoints: web
+      traefik.http.routers.weather.middlewares: "weather-rewrite"

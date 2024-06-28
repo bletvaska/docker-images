@@ -3,7 +3,10 @@ from time import time
 
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
-import loguru
+
+from weather.dependencies import get_logger
+
+logger = get_logger()
 
 
 class AccessLog(BaseHTTPMiddleware):
@@ -13,11 +16,11 @@ class AccessLog(BaseHTTPMiddleware):
     Args:
         BaseHTTPMiddleware: startlette base middleware class
     """
+
     async def dispatch(self, request: Request, call_next):
         response = await call_next(request)
 
         # prepare log message
-        logger = loguru.logger.opt(colors=True)
         status = HTTPStatus(response.status_code).name.replace("_", " ").title()
         logger.info(
             f"{request.client.host}:{request.client.port} "
@@ -34,6 +37,7 @@ class AddProcessTimeHeader(BaseHTTPMiddleware):
     Args:
         BaseHTTPMiddleware: startlette base middleware class
     """
+
     async def dispatch(self, request: Request, call_next):
         start_time = time()
         response = await call_next(request)

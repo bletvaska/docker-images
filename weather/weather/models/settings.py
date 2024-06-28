@@ -1,31 +1,32 @@
-from pydantic import BaseSettings, validator, AnyHttpUrl
-import pendulum
+from pydantic import validator, AnyHttpUrl, AnyUrl, Field
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
     db_uri: str = "sqlite:///db.sqlite"
-    base_url: AnyHttpUrl = 'http://localhost:8000'
+    base_url: None | AnyHttpUrl = None  # 'http://localhost:8000'
+    path_prefix: str = '/weather'
     token: str | None = None
-    environment = "production"
-    units = "metric"
-    query = "kosice,sk"
-    update_interval = 60
-    language = "en"
-    dt_format = "%Y-%m-%dT%H:%M:%SZ"
-    log_level = 'INFO'
-    timezone = 'UTC'
-    theme = 'bitday'
+    environment: str = "prod"
+    units: str = "metric"
+    query: str = "kosice,sk"
+    update_interval: int = 60
+    language: str = "en"
+    dt_format: str = "%Y-%m-%dT%H:%M:%SZ"
+    log_level: str = 'INFO'
+    timezone: str = 'UTC'
+    theme: str = 'bitday'
 
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
         env_prefix = "weather_"
 
-    @validator('timezone')
-    def validate_timezone(cls, value):
-        if value not in pendulum.timezones:
-            raise ValueError('Invalid Timezone.')
-        return value
+    # @validator('timezone')
+    # def validate_timezone(cls, value):
+    #     if value not in pendulum.timezones:
+    #         raise ValueError('Invalid Timezone.')
+    #     return value
 
     @validator("units")
     def validate_units(cls, value):

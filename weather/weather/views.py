@@ -2,6 +2,7 @@ from fastapi import APIRouter, Request, Depends
 from fastapi.templating import Jinja2Templates
 import pendulum
 from sqlmodel import Session, select
+from loguru import logger
 
 from .dependencies import get_settings, get_templates, get_session
 from .models.settings import Settings
@@ -37,22 +38,21 @@ def get_history(session: Session = Depends(get_session), format: str = 'json'):
     statement = select(Measurement)
     data = session.exec(statement).all()
 
-    # prepare output format
-
+    # TODO prepare output format
     return data
 
 
 @router.get("/")
 def homepage(request: Request, settings: Settings = Depends(get_settings),
              templates: Jinja2Templates = Depends(get_templates), session: Session = Depends(get_session)):
-
     # prepare context
     context = {
         "request": request,
-        "base_url": settings.base_url,
+        # "base_url": settings.base_url,
         "refresh": settings.update_interval,
         "version": __version__,
         "environment": settings.environment,
+        "theme": settings.theme,
     }
 
     # is valid token?
@@ -68,30 +68,41 @@ def homepage(request: Request, settings: Settings = Depends(get_settings),
     weather = session.exec(statement).first()
 
     now = pendulum.now(settings.timezone)
-    sunrise = pendulum.instance(weather.sunrise).subtract(minutes=15)
-    sunset = pendulum.instance(weather.sunset).add(minutes=15)
+    sunrise = pendulum.instance(weather.sunrise).in_timezone(settings.timezone)
+    sunset = pendulum.instance(weather.sunset).in_timezone(settings.timezone)
+    logger.debug(f'{now} {sunrise} {sunset}')
+    logger.debug(f'{now.timezone} {sunrise.timezone} {sunset.timezone}')
 
     # from IPython import embed; embed()
     # get background nr based on sunset, sunrise and now
     # is it a day now?
-    if sunrise <= now <= sunset:
+    if sunrise.subtract(minutes=15) <= now <= sunset.add(minutes=15):
         value = _translate(now.timestamp(), sunrise.timestamp(), sunset.timestamp(), 1, 9)
         background_nr = int(value)
-        print(f'night {background_nr}')
+        logger.info(f'day {background_nr}')
     else:
         # or is it night now?
-        if sunset > now:
+        if sunset.add(minutes=15) > now:
             value = _translate(now.timestamp(), sunset.subtract(days=1).timestamp(), sunrise.timestamp(), 10, 12)
-        elif sunrise < now:
+        elif sunrise.subtract(minutes=15) < now:
             value = _translate(now.timestamp(), sunset.timestamp(), sunrise.add(days=1).timestamp(), 10, 12)
         background_nr = int(value)
-        print(f'day {background_nr}')
+        # logger.info(f'night {background_nr}')
 
-    context.update(
-        now=now,
-        background_nr=background_nr,
-        weather=weather.dict(),
-        title='Current Weather'
-    )
+    # print(request.headers)
+    if 'text/html' in request.headers['accept']:
+        context.update(
+            now=now,
+            background_nr=background_nr,
+            weather=weather.dict(),
+            title='Current Weather',
+            sunrise=sunrise,
+            sunset=sunset,
+        )
 
-    return templates.TemplateResponse("current.weather.html", context)
+        return templates.TemplateResponse("current.weather.html", context)
+
+    else:
+        return {
+            'hello': 'world'
+        }

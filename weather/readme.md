@@ -5,8 +5,9 @@ Simple Weather app for my Docker 101 course. The info is taken from openweatherm
 
 ## Tags
 
-* [`latest`](https://github.com/bletvaska/docker-images/blob/master/weather/Dockerfile)
-  , [`2023.1`](https://github.com/bletvaska/docker-images/blob/master/weather/Dockerfile)
+* [`latest`]()
+  , [`2024.1`]()
+* [`2023.1`](https://github.com/bletvaska/docker-images/blob/master/weather/Dockerfile)
 * [`2022.1`](https://github.com/bletvaska/docker-images/blob/master/weather/Dockerfile)
 
 

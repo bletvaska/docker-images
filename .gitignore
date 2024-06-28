@@ -1,2 +1,6 @@
 *.tar.gz
+dist/
+__pycache__/
+.idea/
+poetry.lock
 

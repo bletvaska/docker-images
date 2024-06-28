@@ -1,0 +1,22 @@
+FROM python:3.11-slim AS builder
+
+ARG PACKAGE=weather-2024.4-py3-none-any.whl
+
+COPY dist/${PACKAGE} /build/
+
+RUN python3 -m venv /venv \
+    && /venv/bin/pip3 install --no-cache-dir --upgrade pip /build/${PACKAGE}
+
+#ENV PYTHONPATH=/venv/lib/python3.11/site-packages
+#
+#CMD [ "-m", "weather" ]
+
+FROM gcr.io/distroless/python3-debian12
+COPY --from=builder /venv/ /venv/
+COPY --from=builder /usr/bin/timeout /usr/bin/timeout
+
+ENV PYTHONPATH=/venv/lib/python3.11/site-packages
+
+EXPOSE 8000
+
+CMD [ "-m", "weather" ]

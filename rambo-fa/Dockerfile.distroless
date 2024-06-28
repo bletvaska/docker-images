@@ -8,6 +8,7 @@ RUN python3 -m venv /venv \
 
 FROM gcr.io/distroless/python3-debian11
 COPY --from=builder /venv/ /venv/
+COPY --from=builder /usr/bin/timeout /usr/bin/timeout
 
 ENV PYTHONPATH=/venv/lib/python3.10/site-packages
 

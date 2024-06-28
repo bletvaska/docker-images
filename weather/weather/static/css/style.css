@@ -42,7 +42,7 @@ body {
 }
 
 #version {
-    position: absolute;
+    position: fixed;
     right: 10px;
     bottom: 10px;
     opacity: 0.5;
@@ -105,7 +105,8 @@ body {
 
 
 #credits {
-    position: absolute;
-    bottom: 5px;
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
     opacity: 0.5;
 }

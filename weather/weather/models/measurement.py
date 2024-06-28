@@ -1,6 +1,7 @@
 from datetime import datetime
-from sqladmin import ModelView
 
+import pendulum
+from sqladmin import ModelView
 from sqlmodel import SQLModel, Field
 
 
@@ -31,9 +32,9 @@ class Measurement(SQLModel, table=True):
             temp_max=data["main"]["temp_max"],
             desc=data["weather"][0]["main"],
             weather_id=data['weather'][0]['id'],
-            sunset=data["sys"]["sunset"],
-            sunrise=data["sys"]["sunrise"],
-            ts=data['dt'],
+            sunset=pendulum.from_timestamp(data["sys"]["sunset"]),
+            sunrise=pendulum.from_timestamp(data["sys"]["sunrise"]),
+            ts=pendulum.from_timestamp(data['dt']),
             city=data['name'],
             country=data['sys']['country'].lower(),
             pressure=data['main']['pressure'],
@@ -46,4 +47,5 @@ class Measurement(SQLModel, table=True):
 
 
 class MeasurementAdmin(ModelView, model=Measurement):
-    column_list = [Measurement.ts, Measurement.city, Measurement.country, Measurement.sunset, Measurement.sunrise, Measurement.temp, Measurement.humidity, Measurement.pressure]
+    column_list = [Measurement.ts, Measurement.city, Measurement.country, Measurement.sunset, Measurement.sunrise,
+                   Measurement.temp, Measurement.humidity, Measurement.pressure]

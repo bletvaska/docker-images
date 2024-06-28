@@ -8,3 +8,5 @@
    * pridat aj nastavenie typu zobrazovat/nezobrazovat fortunes
 
 * pridat temy obrazkov a premennu do konfiguracie, pomocou ktorej je mozne temu zmenit
+
+* spojazdnit premennu prostredia `TZ` pre nastavenie casovej zony

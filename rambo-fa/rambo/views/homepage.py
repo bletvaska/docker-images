@@ -1,7 +1,8 @@
-from datetime import datetime
 import socket
+from logging import getLogger
 
 import fastapi
+import pendulum
 from fastapi import Request, Depends
 from fastapi.templating import Jinja2Templates
 
@@ -9,21 +10,23 @@ from rambo.dependencies import get_settings, get_jinja, get_title
 from rambo.models.settings import Settings
 
 router = fastapi.APIRouter()
+logger = getLogger('uvicorn.error')
 
 
 @router.get('/')
 def hello(request: Request, settings: Settings = Depends(get_settings),
-          templates: Jinja2Templates = Depends(get_jinja)):
+          jinja: Jinja2Templates = Depends(get_jinja)):
+    logger.info('>> RAMBO received a request!')
+
     data = {
         'request': request,
-        'title': 'Rambo',
-        'rambo': get_title(),
+        'movie': get_title(),
         'hostname': socket.gethostname(),
         'ip_address': socket.gethostbyname(socket.gethostname()),
-        'current_date': datetime.utcnow().astimezone().replace(microsecond=0).isoformat(),
+        'current_date': pendulum.now().to_iso8601_string(),
         'refresh_rate': settings.refresh_rate,
         'base_url': settings.base_url,
-        'part': 1
+        'part': settings.part
     }
 
-    return templates.TemplateResponse('home.html', data)
+    return jinja.TemplateResponse('index.html', data)

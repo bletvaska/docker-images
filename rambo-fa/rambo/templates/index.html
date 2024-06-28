@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="{{ refresh_rate | default(1, true) }}" />
+    <script src="/static/js/tailwind.min.js"></script>
+    <title>{{ movie.title }}</title>
+    <style>
+        html,
+        body {
+            background: black
+        }
+    </style>
+</head>
+
+<body>
+    <div class="w-100 relative overflow-hidden bg-black text-center">
+        <img src="/static/images/poster_{{ part }}.png"
+            class="w-100 h-[571px] object-cover mr-auto ml-auto" />
+        <div class="w-[101vw] h-[571px] absolute left-[-1.02px] top-[0px]"
+            style="background: linear-gradient(-0.19deg, #000 0.15%, rgba(0,0,0,0.57) 28.29%, rgba(0,0,0,0.12) 45.87%, rgba(0,0,0,0) 64.05%, rgba(0,0,0,0) 81.72%, rgba(0,0,0,0.28) 104.06%);">
+        </div>
+        <header class="flex justify-between items-end flex-wrap gap-5 w-100 mt-[-300px] mr-auto ml-auto max-w-[1500px] px-[72px] py-16">
+            <div class="flex flex-col justify-start items-start flex-grow-0 flex-shrink-0 w-100 gap-[25px]">
+                <div class="flex justify-start items-start flex-grow-0 flex-shrink-0 gap-1.5">
+
+                  {% for genre in movie.genres %}
+                    <div
+                        class="flex justify-center items-center flex-grow-0 flex-shrink-0 relative gap-2 px-4 py-1 rounded-[999px] bg-[#0d0c0f]/75 border border-white/[0.15] backdrop-blur-[10px]">
+                        <p class="flex-grow-0 flex-shrink-0 text-xs font-medium text-left text-[#f9f9f9]">
+                          {{ genre }}
+                        </p>
+                    </div>
+                  {% endfor %}
+
+                </div>
+                <div
+                    class="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 relative gap-2">
+                    <p class="self-stretch flex-grow-0 flex-shrink-0 w-100 text-[34px] font-bold text-left text-white">
+                        {{ movie.title }}
+                    </p>
+                    <p class="self-stretch flex-grow-0 flex-shrink-0 w-100 text-sm text-left text-[#9ca4ab]">
+                        {{ movie.year }} • {{ movie.rated }} • {{ movie.runtime | duration }}
+                    </p>
+                </div>
+                <div class="flex justify-start items-center flex-grow-0 flex-shrink-0 gap-6">
+                    <a href="{{ movie.trailer }}" class="flex justify-center items-center flex-grow-0 flex-shrink-0 h-12 cursor-pointer">
+                        <div
+                            class="flex justify-center items-center self-stretch flex-grow-0 flex-shrink-0 relative gap-2.5 px-6 py-3 rounded-[10px] bg-[#f00]">
+                            <svg width="25" height="26" viewBox="0 0 25 26" fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="flex-grow-0 flex-shrink-0 w-100 h-[25px] relative"
+                                preserveAspectRatio="xMidYMid meet">
+                                <path
+                                    d="M21.45 12.9999C21.45 17.9429 17.443 21.9499 12.5 21.9499C7.55707 21.9499 3.55002 17.9429 3.55002 12.9999C3.55002 8.05699 7.55707 4.04994 12.5 4.04994C17.443 4.04994 21.45 8.05699 21.45 12.9999ZM12.5258 8.58623C11.8201 8.11571 10.9126 8.07185 10.1647 8.47209C9.41688 8.87233 8.95002 9.65171 8.95002 10.4999V15.4999C8.95002 16.3482 9.41688 17.1275 10.1647 17.5278C10.9126 17.928 11.8201 17.8842 12.5258 17.4137L16.2758 14.9137C16.9157 14.4871 17.3 13.769 17.3 12.9999C17.3 12.2309 16.9157 11.5128 16.2758 11.0862L12.5258 8.58623Z"
+                                    fill="white" stroke="white" stroke-width="2.1"></path>
+                            </svg>
+                            <p class="flex-grow-0 flex-shrink-0 text-base font-bold text-left text-[#f9f9f9]">
+                                Play trailer
+                            </p>
+                        </div>
+                    </a>
+                    <a href="{{ movie.imdb }}" class="flex justify-start items-start flex-grow-0 flex-shrink-0 h-12 cursor-pointer">
+                        <div
+                            class="flex justify-start items-start self-stretch flex-grow-0 flex-shrink-0 relative gap-2.5 px-6 py-3 rounded-[10px] border-[1.05px] border-white">
+                            <svg width="25" height="25" viewBox="0 0 25 25" fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="flex-grow-0 flex-shrink-0 w-[25px] h-[25px] relative mt-[-2px]"
+                                preserveAspectRatio="xMidYMid meet">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M3 13C3 14.3132 3.25866 15.6136 3.7612 16.8268C4.26375 18.0401 5.00035 19.1425 5.92893 20.0711C6.85752 20.9997 7.95991 21.7362 9.17317 22.2388C10.3864 22.7413 11.6868 23 13 23C14.3132 23 15.6136 22.7413 16.8268 22.2388C18.0401 21.7362 19.1425 20.9997 20.0711 20.0711C20.9997 19.1425 21.7362 18.0401 22.2388 16.8268C22.7413 15.6136 23 14.3132 23 13C23 10.3478 21.9464 7.8043 20.0711 5.92893C18.1957 4.05357 15.6522 3 13 3C10.3478 3 7.8043 4.05357 5.92893 5.92893C4.05357 7.8043 3 10.3478 3 13ZM21.8235 13C21.8235 15.3401 20.8939 17.5844 19.2392 19.2392C17.5844 20.8939 15.3401 21.8235 13 21.8235C10.6599 21.8235 8.41556 20.8939 6.76082 19.2392C5.10609 17.5844 4.17647 15.3401 4.17647 13C4.17647 10.6599 5.10609 8.41556 6.76082 6.76082C8.41556 5.10609 10.6599 4.17647 13 4.17647C15.3401 4.17647 17.5844 5.10609 19.2392 6.76082C20.8939 8.41556 21.8235 10.6599 21.8235 13Z"
+                                    fill="white"></path>
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M8.88235 13C8.88235 18.1718 10.5788 22.4118 13 22.4118C15.4212 22.4118 17.1176 18.1718 17.1176 13C17.1176 7.82826 15.4212 3.58826 13 3.58826C10.5788 3.58826 8.88235 7.82826 8.88235 13ZM15.9412 13C15.9412 17.5753 14.4765 21.2353 13 21.2353C11.5235 21.2353 10.0588 17.5753 10.0588 13C10.0588 8.42473 11.5235 4.76473 13 4.76473C14.4765 4.76473 15.9412 8.42473 15.9412 13Z"
+                                    fill="white"></path>
+                                <path
+                                    d="M5.6294 7.48476L6.41764 6.61182C6.54352 6.72476 6.67764 6.83535 6.82117 6.9424C8.37176 8.10476 10.8188 8.81299 13.4859 8.81299C15.76 8.81299 17.8823 8.29887 19.4329 7.41299C19.7902 7.21085 20.1277 6.97571 20.4412 6.71064L21.2059 7.60476C20.8553 7.90476 20.4576 8.18123 20.0176 8.43299C18.28 9.42711 15.9565 9.98946 13.4859 9.98946C10.58 9.98946 7.88352 9.20946 6.11528 7.88358C5.94727 7.75778 5.78514 7.62548 5.6294 7.48476ZM5.6294 18.5295L6.41764 19.4C6.54352 19.2871 6.67764 19.1765 6.82117 19.0706C8.37176 17.9083 10.8188 17.2001 13.4859 17.2001C15.76 17.2001 17.8823 17.713 19.4329 18.6001C19.8106 18.8165 20.1482 19.0518 20.4412 19.3012L21.2059 18.4071C20.8365 18.0945 20.4387 17.8172 20.0176 17.5789C18.28 16.5859 15.9565 16.0236 13.4859 16.0236C10.58 16.0236 7.88352 16.8036 6.11528 18.1283C5.94352 18.2577 5.78117 18.3918 5.6294 18.5295ZM3.58823 13.5883V12.4118H22.4118V13.5883H3.58823Z"
+                                    fill="white"></path>
+                            </svg>
+                            <p class="flex-grow-0 flex-shrink-0 text-base font-bold text-left text-white">
+                                More info
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </header>
+        <div class="flex flex-row justify-start items-stretch flex-wrap mr-auto ml-auto max-w-[1500px] lg:flex-nowrap w-100 mt-[20px] gap-10 px-[72px] pb-[42px]">
+            <div class="flex flex-col justify-start items-start flex-grow relative">
+                <p class="self-stretch flex-grow-0 flex-shrink-0 text-base font-medium text-left text-[#9ca4ab]">
+                  {{ movie.plot }}
+                </p>
+                <p class="self-stretch flex-grow-0 flex-shrink-0 text-base font-medium text-left text-[#9ca4ab] mt-[20px]">
+                  <b>Director: </b>{{ movie.director }} <b>Stars:</b> {{ movie.actors | join(', ') }}
+                </p>
+            </div>
+            <div class="flex flex-col items-start flex-grow-0">
+                <div class="flex justify-start items-start flex-grow-0 flex-shrink-0 w-[300px] relative gap-4">
+                    <div class="self-stretch flex-grow-0 flex-shrink-0 w-1 bg-[#f00]"></div>
+                    <div class="flex flex-col justify-start items-start flex-grow relative gap-4">
+                        <p class="self-stretch flex-grow-0 flex-shrink-0 w-[280px] text-xl font-bold text-left text-white">
+                            Container info
+                        </p>
+                        <div class="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 relative gap-2">
+                            <p class="self-stretch flex-grow-0 flex-shrink-0 w-[280px] text-base font-medium text-left">
+                                <span class="self-stretch flex-grow-0 flex-shrink-0 w-[280px] text-base font-medium text-left text-[#9ca4ab]">IP:
+                                </span><span class="self-stretch flex-grow-0 flex-shrink-0 w-[280px] text-base font-medium text-left text-white">{{ ip_address }}</span>
+                            </p>
+                            <p class="self-stretch flex-grow-0 flex-shrink-0 w-[280px] text-base font-medium text-left">
+                                <span class="self-stretch flex-grow-0 flex-shrink-0 w-[280px] text-base font-medium text-left text-[#9ca4ab]">Hostname:
+                                </span><span class="self-stretch flex-grow-0 flex-shrink-0 w-[280px] text-base font-medium text-left text-white">{{ hostname }}</span>
+                            </p>
+                            <p class="self-stretch flex-grow-0 flex-shrink-0 w-[280px] text-base font-medium text-left">
+                                <span class="self-stretch flex-grow-0 flex-shrink-0 w-[280px] text-base font-medium text-left text-[#9ca4ab]">Date:
+                                </span><span class="self-stretch flex-grow-0 flex-shrink-0 w-[280px] text-base font-medium text-left text-white">{{ current_date }}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="flex flex-col justify-start items-start mt-[20px] mr-auto ml-auto max-w-[1500px] gap-0.5 px-[72px] pb-[42px]">
+            <div class="flex justify-start items-start flex-grow-0 flex-shrink-0 w-100 relative gap-[15px]">
+                <p class="flex-grow w-100 text-sm font-light text-left text-[#9ca4ab]">
+                    (C) stolen by mirek 2020-2024, created with <a href="https://fastapi.tiangolo.com/">FastAPI</a>
+                </p>
+            </div>
+            <div class="flex justify-between flex-grow-1 flex-shrink-1 w-[100%] relative gap-[15px]">
+                <p class="flex-grow w-100 text-sm font-light text-left text-[#9ca4ab]">
+                    Design by <a href="https://www.linkedin.com/in/trueamber/">Vladyslav Panik</a> &#x26; Frontend by <a
+                        href="https://www.linkedin.com/in/yurii-soma/">Yurii Soma</a> - KPI FEI TUKE
+                </p>
+                <p class="flex-grow-0 flex-shrink-0 text-sm font-light text-right text-[#9ca4ab]">
+                    {{ current_date }}
+                </p>
+            </div>
+        </footer>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+# docker buildx build --tag rambo --file Dockerfile.slim --build-arg RAMBO_PART=1 .
+FROM python:3.12-slim
+
+ARG PACKAGE=rambo-2024.6-py3-none-any.whl
+ARG USER=rambo
+ARG GROUP=usarmy
+
+RUN groupadd --gid 10001 "${GROUP}" \
+    && useradd --uid 10000 --gid "${GROUP}" --no-create-home --home /nonexistent --comment "John Rambo" --shell /bin/false "${USER}"
+
+COPY dist/${PACKAGE} /tmp/
+
+RUN python3 -m venv /venv \
+    && /venv/bin/pip3 install --no-cache-dir --upgrade pip /tmp/${PACKAGE} \
+    && rm /tmp/${PACKAGE} \
+    && chown --recursive ${USER}:${GROUP} /venv
+
+ARG RAMBO_PART=1
+ENV PYTHONPATH=/venv/lib/python3.12/site-packages
+ENV RAMBO_PART=${RAMBO_PART}
+
+# run container as specific user
+EXPOSE 8000
+USER ${USER}:${GROUP}
+
+COPY entrypoint.bash /
+ENTRYPOINT ["/entrypoint.bash"]
+
+# healthcheck -> returns headshot
+# what is the time? / timezone -> TZ funguje, opravit treba v appke
+# security scan/check
+
+CMD [ "/usr/bin/env", "python3", "-m", "rambo" ]
