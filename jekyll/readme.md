@@ -10,7 +10,7 @@ All commands are run from your project directory, mounted into the container as 
 $ docker container run --rm -it \
     --user $(id --user):$(id --group) \
     --volume .:/web \
-    jekyll make <target>
+    bletvaska/jekyll make <target>
 ```
 
 To see all the available targets, type:
@@ -19,10 +19,8 @@ To see all the available targets, type:
 $ docker container run --rm -it \
     --user $(id --user):$(id --group) \
     --volume .:/web \
-    jekyll make help
+    bletvaska/jekyll make help
 ```
-
-
 
 
 ### Start a new project
@@ -33,7 +31,7 @@ Creates a new Jekyll site scaffold in the current directory:
 $ docker container run --rm -it \
     --user $(id --user):$(id --group) \
     --volume .:/web \
-    jekyll make new
+    bletvaska/jekyll make new
 ```
 
 
@@ -45,7 +43,7 @@ Installs all gems defined in `Gemfile` into `vendor/bundle/`:
 $ docker container run --rm -it \
     --user $(id --user):$(id --group) \
     --volume .:/web \
-    jekyll make install
+    bletvaska/jekyll make install
 ```
 
 
@@ -57,7 +55,7 @@ Generates the static site into `_site/`:
 $ docker container run --rm -it \
     --user $(id --user):$(id --group) \
     --volume .:/web \
-    jekyll make build
+    bletvaska/jekyll make build
 ```
 
 
@@ -70,7 +68,7 @@ $ docker container run --rm -it \
     --user $(id --user):$(id --group) \
     --volume .:/web \
     --publish 5000:5000 \
-    jekyll make serve
+    bletvaska/jekyll make serve
 ```
 
 
@@ -83,7 +81,7 @@ $ alias jekyll="docker container run --rm -it \
     --user $(id --user):$(id --group) \
     --volume .:/web \
     --publish 5000:5000 \
-    jekyll make"
+    bletvaska/jekyll make"
 ```
 
 Then you can simply run on your system command `jekyll <target>`. To see all the available targets, simply type:
