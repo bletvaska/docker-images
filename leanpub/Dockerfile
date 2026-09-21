@@ -1,58 +1,102 @@
-FROM debian:11-slim
-#FROM ruby:2.7-alpine
+FROM debian:trixie-slim
 
 LABEL maintainer="mirek <mirek@cnl.sk>"
 LABEL title="LeanPub Powered"
 LABEL description="LeanPub heavy powered docker image Courses at Department of Computers and Informatics at Technical University of Košice"
-LABEL version="2022.10"
+LABEL version="2026.09"
+
+# pandoc-crossref releases are only published in lockstep with a specific
+# pandoc version, so both are pinned together and installed from upstream
+# instead of apt (Debian trixie's packaged pandoc, 3.1.11, predates every
+# available pandoc-crossref release).
+ARG PANDOC_VERSION=3.10.1
+ARG PANDOC_CROSSREF_VERSION=0.3.25
+
+# Debian trixie ships just 1.40.0; the [arg(...)] attribute used for
+# long-form recipe flags needs 1.46.0+, so just is pinned from upstream too.
+ARG JUST_VERSION=1.58.0
 
 # set timezone
 RUN cp /usr/share/zoneinfo/Europe/Bratislava /etc/localtime \
     && echo "Europe/Bratislava" > /etc/timezone
 
-# install pandoc and jekyll
-RUN apt update
-    #&& apt install pandoc jekyll
+# without a locale, Ruby's default external encoding is US-ASCII, which
+# crashes on any UTF-8 content (Slovak diacritics included); C.UTF-8 is
+# built into glibc, no locale-gen/locales package needed
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
 
-# install packages for jekyll
-#RUN apk add --no-cache make gcc libc-dev g++ ruby-dev
-#RUN gem install jekyll-pandoc paru minima webrick
-#RUN apk del make gcc libc-dev g++ ruby-dev
+# jekyll (and ruby) come straight from Debian; the plugin gems below are
+# pure-ruby, so no compiler toolchain is needed
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y \
+        jekyll \
+        ca-certificates \
+        curl \
+        xz-utils \
+        zip \
+        python3 \
+        python3-venv \
+    && rm -rf /var/lib/apt/lists/*
 
-##! TODO python, later replacement for pandoc filters in ruby
-## gettext zip
-#RUN apk add --no-cache python3 py3-pip py3-dotenv py3-requests py3-rich py3-jinja2 \
-    #&& pip install --no-cache-dir panflute invoke pydantic python-frontmatter
-    ## && ln -s /usr/bin/python3 /usr/bin/python \
+RUN gem install --no-document jekyll-pandoc paru minima webrick
 
-## invoke needs bash
-## zip and curl for deployment
-#RUN apk add --no-cache bash # vim zip curl
+# pandoc, pandoc-crossref and just, pinned upstream binaries
+# (bounded per-attempt timeout + retries so a stalled connection fails
+# instead of hanging forever; -C - resumes each retry instead of
+# restarting the download from zero on a slow connection)
+RUN curl_fetch="curl -fsSL -C - --connect-timeout 10 --max-time 300 --retry 5 --retry-delay 5" \
+    && ${curl_fetch} -o /tmp/pandoc.tar.gz \
+        "https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz" \
+    && tar -xzf /tmp/pandoc.tar.gz -C /usr/local --strip-components=1 \
+    && rm /tmp/pandoc.tar.gz \
+    && ${curl_fetch} -o /tmp/pandoc-crossref.tar.xz \
+        "https://github.com/lierdakil/pandoc-crossref/releases/download/v${PANDOC_CROSSREF_VERSION}/pandoc-crossref-Linux-X64.tar.xz" \
+    && tar -xJf /tmp/pandoc-crossref.tar.xz -C /usr/local/bin pandoc-crossref \
+    && rm /tmp/pandoc-crossref.tar.xz \
+    && ${curl_fetch} -o /tmp/just.tar.gz \
+        "https://github.com/casey/just/releases/download/${JUST_VERSION}/just-${JUST_VERSION}-x86_64-unknown-linux-musl.tar.gz" \
+    && tar -xzf /tmp/just.tar.gz -C /usr/local/bin just \
+    && rm /tmp/just.tar.gz
 
-## install theme
-#COPY jekyll-theme-nucky/ /tmp/jekyll-theme-nucky/
-#RUN cd /tmp/jekyll-theme-nucky \
-    #&& gem build jekyll-theme-nucky.gemspec \
-    #&& gem install --local jekyll-theme-nucky-2022.10.gem \
-    #&& rm -rf /tmp/jekyll-theme-nucky
+# install theme
+COPY jekyll-theme-nucky/ /tmp/jekyll-theme-nucky/
+RUN cd /tmp/jekyll-theme-nucky \
+    && gem build jekyll-theme-nucky.gemspec \
+    && gem install --local jekyll-theme-nucky-2026.09.gem \
+    && rm -rf /tmp/jekyll-theme-nucky
 
-## experimental - texlive support
-## RUN apk add --no-cache texlive
-#ENV TEXMFHOME=/texmf
-#COPY texmf/ /texmf/
+# python toolchain used by tasks.py (invoke)
+# Debian marks the system python as externally managed (PEP 668), so
+# dependencies live in a dedicated venv instead of a plain `pip install`
+COPY requirements.txt /tmp/requirements.txt
+RUN python3 -m venv /opt/venv \
+    && /opt/venv/bin/pip install --no-cache-dir -r /tmp/requirements.txt \
+    && rm /tmp/requirements.txt
+ENV PATH="/opt/venv/bin:${PATH}"
 
-## environment variables
-#ENV JEKYLL_ENV=development
-#ENV DATADIR=/pandoc
-## to avoid saving user specific files to project files
-#ENV HOME=/tmp
+# experimental - texlive support
+ENV TEXMFHOME=/app/texmf
+COPY texmf/ /app/texmf/
 
-#WORKDIR /courseware
-#EXPOSE 4000
+# environment variables
+ENV JEKYLL_ENV=development
+# lets pandoc resolve --defaults/--csl/--template by bare name from
+# /app/pandoc/{defaults,csl,templates}/, no full path needed
+ENV XDG_DATA_HOME=/app
+# to avoid saving user specific files to project files
+ENV HOME=/tmp
 
-#ADD pandoc /pandoc
-#ADD entrypoint.sh /
-#ADD tasks.py /
+WORKDIR /courseware
+EXPOSE 4000
 
-#ENTRYPOINT [ "/entrypoint.sh" ]
+# everything the image itself contributes (as opposed to the courseware
+# mounted at /courseware) lives together under /app
+ADD pandoc /app/pandoc
+ADD _config_defaults.yml /app/_config_defaults.yml
+ADD justfile /app/justfile
+ADD entrypoint.sh /app/entrypoint.sh
+ADD tasks.py /app/tasks.py
+ADD liquid_render.rb /app/liquid_render.rb
 
+ENTRYPOINT [ "/app/entrypoint.sh" ]

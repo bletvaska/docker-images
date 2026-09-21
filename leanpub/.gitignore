@@ -1,0 +1,6 @@
+# LaTeX build artifacts
+pandoc/templates/*.aux
+pandoc/templates/*.fdb_latexmk
+pandoc/templates/*.fls
+pandoc/templates/*.log
+pandoc/templates/*.pdf

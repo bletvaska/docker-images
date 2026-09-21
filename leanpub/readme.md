@@ -89,7 +89,7 @@ The templates and styles of artefacts are part of the Docker image. To modify th
 ```bash
 $ alias leanpub='docker container run --rm -it \
     --volume $(pwd):/courseware \
-    --volume /path/to/docker/image/leanpub/pandoc/:/pandoc \
+    --volume /path/to/docker/image/leanpub/pandoc/:/app/pandoc \
     --publish 4000:4000 \
     --user $(id -u ${USER}):$(id -g ${USER}) \
     leanpub'

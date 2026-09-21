@@ -1,5 +1,10 @@
 # Todo
 
+* zbavit sa python-u
+  * filtre prepisat do haskelu pomocou claude
+  * nahradit sablonovaci system pomocou go-templates
+  * invoke skusit nahradit pomocou justfile
+
 * pdf build support
 * refactor building and deploying to be able to use in CI/CD in gitlab
 * refactor situations when env variables are simply missing

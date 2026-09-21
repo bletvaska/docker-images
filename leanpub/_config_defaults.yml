@@ -1,0 +1,22 @@
+# Shared Jekyll defaults for every course, layered in before the course's
+# own _config.yml (see tasks.py). Jekyll merges config files left-to-right;
+# a course only needs to repeat a key here if it wants to change it, but a
+# course that lists its OWN 'plugins' or 'pandoc' key overrides this whole
+# key (Jekyll does not merge array values across files), not just add to it.
+
+markdown: Pandoc
+plugins:
+    - jekyll-pandoc
+
+pandoc:
+    extensions:
+        - mathjax
+        - defaults: citations
+        - bibliography: references.bib
+
+# reveal.js for slides (layout 'slides'): the core and the official plugins
+# are loaded from the jsDelivr CDN, so the version is pinned here and a
+# course can override it in its own _config.yml
+reveal:
+    version: 6.0.2            # npm package reveal.js
+    menu_version: 2.1.0       # npm package reveal.js-menu

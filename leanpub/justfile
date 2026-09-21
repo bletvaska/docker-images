@@ -1,0 +1,99 @@
+set dotenv-load := true
+
+default:
+    @just --list
+
+# Show versions of the tools baked into this image.
+versions:
+    @echo "just:            $(just --version)"
+    @echo "jekyll:          $(jekyll --version)"
+    @echo "pandoc:          $(pandoc --version | head -n1)"
+    @echo "pandoc-crossref: $(pandoc-crossref --version | head -n1)"
+
+# Build your site. Drafts are left out unless --drafts is given;
+# --production builds with JEKYLL_ENV=production (no livejs) and without
+# incremental regeneration, which is what a published site needs.
+[arg("lecturer", long="lecturer", value="true")]
+[arg("destination", long="destination")]
+[arg("drafts", long="drafts", value="true")]
+[arg("production", long="production", value="true")]
+build lecturer="false" destination="_site" drafts="false" production="false":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    configs="/app/_config_defaults.yml,_config.yml"
+    dest="{{destination}}"
+    if [ "{{lecturer}}" = "true" ]; then
+        configs="$configs,_config_lecturer.yml"
+        dest="$dest/${LECTURER_FOLDER}"
+    fi
+    args=(jekyll build --destination "$dest" --config="$configs")
+    if [ "{{drafts}}" = "true" ]; then
+        args+=(--drafts)
+    fi
+    if [ "{{production}}" = "true" ]; then
+        export JEKYLL_ENV=production
+    else
+        args+=(--incremental)
+    fi
+    exec "${args[@]}"
+
+# Clean the site (removes site output and metadata file) without building.
+clean:
+    jekyll clean
+    rm -rf "${COURSE:-}.zip"
+
+# Runs jekyll serve.
+[arg("lecturer", long="lecturer", value="true")]
+[arg("destination", long="destination")]
+serve lecturer="false" destination="_site":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    configs="/app/_config_defaults.yml,_config.yml"
+    dest="{{destination}}"
+    base_url=""
+    if [ -n "${COURSE:-}" ]; then
+        base_url="/${COURSE}"
+    fi
+    if [ "{{lecturer}}" = "true" ]; then
+        configs="$configs,_config_lecturer.yml"
+        dest="$dest/${LECTURER_FOLDER}"
+        if [ -n "$base_url" ]; then
+            base_url="$base_url/${LECTURER_FOLDER}"
+        else
+            base_url="/${LECTURER_FOLDER}"
+        fi
+    fi
+    args=(jekyll serve --incremental --host "${HOST:-0.0.0.0}" --port "${PORT:-4000}" --drafts --destination "$dest" --config="$configs")
+    if [ -n "$base_url" ]; then
+        args+=(--baseurl "$base_url")
+    fi
+    exec "${args[@]}"
+
+# Runs shell in the courseware (current) directory.
+shell:
+    exec /bin/bash
+
+# Builds epub. Still implemented in Python (frontmatter/regex/Jinja2
+# preprocessing) and run via invoke; see tasks.py.
+epub *ARGS:
+    invoke --search-root /app epub {{ ARGS }}
+
+# Builds PDF document. Still implemented in Python, see epub above.
+pdf *ARGS:
+    invoke --search-root /app pdf {{ ARGS }}
+
+# Deploys course to the web. Builds the student and the lecturer version as
+# in production: no drafts, JEKYLL_ENV=production.
+[arg("destination", long="destination")]
+deploy destination="_public": clean (build "false" destination "false" "true") (build "true" destination "false" "true")
+    #!/usr/bin/env bash
+    set -euo pipefail
+    : "${COURSE:?COURSE is not set}"
+    : "${DEPLOY_TOKEN:?DEPLOY_TOKEN is not set}"
+    cd "{{destination}}"
+    zip -r "../${COURSE}.zip" .
+    cd ..
+    curl -sf -X POST "https://kurzy.kpi.fei.tuke.sk/uploads/${COURSE}" \
+        -H "Authorization: Token ${DEPLOY_TOKEN}" \
+        -F "package=@${COURSE}.zip"
+    rm -rf "${COURSE}.zip" "{{destination}}"
