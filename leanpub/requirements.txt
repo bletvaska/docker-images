@@ -1,0 +1,4 @@
+invoke>=2.2,<3
+rich>=13.7,<14
+python-frontmatter>=1.1,<2
+PyYAML>=6.0,<7

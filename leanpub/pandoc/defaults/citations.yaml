@@ -1,0 +1,39 @@
+# Shared citation setup for courses using citeproc.
+#
+# Usage: in the course's _config.yml (no separate pandoc.yaml file needed)
+#
+#   pandoc:
+#     extensions:
+#       - defaults: citations
+#       - bibliography: _bibliography/references.bib
+#
+# (bare "citations" resolves via XDG_DATA_HOME=/app, set in the image, to
+# /app/pandoc/defaults/citations.yaml; jekyll-pandoc turns each hash in
+# 'extensions' into the matching --flag)
+#
+# A course that skips the 'bibliography' extension still builds fine: the
+# bibliography below is an empty fallback so citeproc always has at least
+# one (real) file to read. Pandoc combines multiple --bibliography values,
+# so the course's own file is added alongside this one, not replacing it.
+#
+# Only the bibliography (and, if a course needs a different style, csl)
+# stays course-local; the filter order and reference-section conventions
+# are shared here.
+
+csl: iso690-numeric-sk.csl
+
+bibliography:
+  - /app/pandoc/empty.bib
+
+# Poradie filtrov je dolezite: citeproc musi bezat pred refs.lua,
+# aby uz existoval <div id="refs">, ktory refs.lua upravuje.
+filters:
+  - alerts.lua
+  - citeproc
+  - refs.lua
+
+# link-citations a reference-section-title su METADATA dokumentu,
+# nie volby defaults suboru -> musia byt pod klucom 'metadata'
+metadata:
+  link-citations: true
+  reference-section-title: "Literatúra"

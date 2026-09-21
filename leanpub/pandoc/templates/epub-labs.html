@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops"$if(lang)$ xml:lang="$lang$"$endif$>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>$pagetitle$</title>
+$if(highlighting-css)$
+  <style>
+$highlighting-css$
+  </style>
+$endif$
+$for(css)$
+  <link rel="stylesheet" type="text/css" href="$css$" />
+$endfor$
+$for(header-includes)$
+  $header-includes$
+$endfor$
+</head>
+<body$if(coverpage)$ id="cover" $else$ id="$pagetitle$" $endif$$if(body-type)$ epub:type="$body-type$"$endif$>
+$-- $pagetitle$ -- $title$ -- $body-type$
+
+$if(coverpage)$
+${ epub-coverpage.html() }
+
+$elseif(titlepage)$
+${ epub-titlepage.html() }
+
+$-- $elseif(navpage)$
+$-- ${ epub-imprint.html() }
+
+$else$
+
+$for(include-before)$
+$include-before$
+$endfor$
+
+$body$
+
+$for(include-after)$
+$include-after$
+$endfor$
+
+$endif$
+
+</body>
+</html>

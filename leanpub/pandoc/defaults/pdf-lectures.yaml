@@ -6,12 +6,12 @@ to: latex
 output-file: lectures.tex
 
 # templating
-template: /pandoc/templates/pdf-lectures.tex
+template: pdf-lectures.tex
 standalone: true
 
 # citations
 citeproc: true
-csl: /pandoc/csl/ieee-with-url.csl
+csl: ieee-with-url.csl
 bibliography:
 - bibliography.bib
 cite-method: biblatex
@@ -19,10 +19,10 @@ cite-method: biblatex
 
 # filters
 filters:
-- /pandoc/filters/alerts.py
-- /pandoc/filters/number-tasks.py
-- /pandoc/filters/images-counter.py
-- /pandoc/filters/pandoc-crossref
+- alerts.lua
+- number-tasks.lua
+- images-counter.lua
+- pandoc-crossref
 
 # pdf engine and latex
 pdf-engine: xelatex

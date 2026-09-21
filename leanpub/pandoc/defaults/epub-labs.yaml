@@ -6,7 +6,7 @@ to: epub
 output-file: download/labs.epub
 
 # templating
-template: /pandoc/templates/epub-labs.html
+template: epub-labs.html
 # standalone: true
 
 # citations
@@ -18,9 +18,9 @@ template: /pandoc/templates/epub-labs.html
 
 # filters
 filters:
-- /pandoc/filters/alerts.py
-- /pandoc/filters/number-tasks.py
-- /pandoc/filters/images-counter.py
+- alerts.lua
+- number-tasks.lua
+- images-counter.lua
 
 # toc
 table-of-contents: true
@@ -40,4 +40,4 @@ metadata-files:
 
 # css styles
 css:
-- /pandoc/styles/epub.css
+- /app/pandoc/styles/epub.css

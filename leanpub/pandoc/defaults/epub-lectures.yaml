@@ -6,20 +6,20 @@ to: epub
 # output-file: download/smart.lectures.2021.epub
 
 # templating
-template: /pandoc/templates/epub-lectures.html
+template: epub-lectures.html
 # standalone: true
 
 # citations
 citeproc: true
-csl: /pandoc/csl/ieee-with-url.csl
+csl: ieee-with-url.csl
 bibliography:
 - bibliography.bib
 
 # filters
 filters:
-- /pandoc/filters/alerts.py
-- /pandoc/filters/number-tasks.py
-- /pandoc/filters/images-counter.py
+- alerts.lua
+- number-tasks.lua
+- images-counter.lua
 
 # toc
 table-of-contents: true
@@ -39,5 +39,5 @@ metadata-files:
 
 # css styles
 css:
-- /pandoc/styles/blitz.css
-#- /pandoc/styles/epub.css
+- /app/pandoc/styles/blitz.css
+#- /app/pandoc/styles/epub.css
