@@ -1,0 +1,151 @@
+/* Course CSS for the Bootstrap 5 default layout.
+   Bootstrap 5 dropped .jumbotron and ties list indentation to the root
+   font-size; both are patched here. The footer/alert rules below are
+   carried over unchanged from the old Bootstrap-4-era theme.css —
+   they're plain CSS, not tied to any Bootstrap version. */
+
+body {
+    font-size: 1.3em;
+    padding-top: 3.5rem;
+}
+
+main {
+    min-height: 100%;
+    overflow: auto;
+}
+
+/* Bootstrap 5 removed .jumbotron; restored here */
+.jumbotron {
+    padding: 4rem 2rem;
+    margin-bottom: 2rem;
+    background-color: #e9ecef;
+    border-radius: 0.3rem;
+}
+
+@media (max-width: 575.98px) {
+    .jumbotron {
+        padding: 2rem 1rem;
+    }
+}
+
+/* Bootstrap's list padding is a fixed 2rem tied to the root font-size;
+   using em instead keeps it proportional to the local (larger) body text */
+ol,
+ul {
+    padding-left: 2em;
+}
+
+.footer aside {
+    font-size: 1rem;
+}
+
+.footer {
+    font-size: 1rem;
+    background-color: #f5f5f5;
+    margin-top: auto !important;
+    width: 100%;
+    position: relative;
+    height: 250px;
+    margin-top: -250px;
+}
+
+.footer div.container {
+    padding-bottom: 1rem !important;
+    padding-top: 1rem !important;
+}
+
+.footer-copyright {
+    background-color: #d5d5d5;
+    text-align: center;
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
+}
+
+.footer-copyright p {
+    margin-bottom: auto !important;
+    margin-top: auto !important;
+}
+
+.license-icons img {
+    height: 2.5rem;
+    margin-bottom: 8px;
+    margin-top: 12px;
+}
+
+.footer-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.theme-alert-info {
+    border-left: 5px solid #0c5460;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #0c5460;
+}
+
+.theme-alert-info p:first-of-type {
+    color: #0c5460;
+    margin-bottom: 13px;
+}
+
+.theme-alert-danger {
+    border-left: 5px solid #d9534f;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #444;
+}
+
+.theme-alert-danger p:first-of-type {
+    color: #d9534f;
+    margin-bottom: 13px;
+}
+
+.theme-alert-lecturer {
+    border-left: 5px solid #f0ad4e;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #444;
+}
+
+.theme-alert-lecturer p:first-of-type {
+    color: #f0ad4e;
+    margin-bottom: 13px;
+}
+
+/* ---------------------------------------------------------------------------
+   Citacie (Markdown ">") – Bootstrap 5 nedava <blockquote> ziadny vzhlad,
+   bez tychto pravidiel splynie s beznym textom.
+   --------------------------------------------------------------------------- */
+main blockquote {
+    margin: 1.5rem 0;
+    padding: 0.75rem 1.25rem;
+    border-left: 4px solid #adb5bd;
+    background-color: #f8f9fa;
+    color: #495057;
+    font-style: italic;
+}
+
+main blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+main blockquote cite,
+main blockquote footer {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-size: 0.9em;
+    color: #6c757d;
+}
+
+[data-bs-theme="dark"] main blockquote {
+    border-left-color: #6c757d;
+    background-color: #2b3035;
+    color: #ced4da;
+}
+
+[data-bs-theme="dark"] main blockquote cite,
+[data-bs-theme="dark"] main blockquote footer {
+    color: #adb5bd;
+}
