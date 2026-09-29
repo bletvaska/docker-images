@@ -7,6 +7,8 @@ and this project adheres to [Calendar Versioning](https://calver.org/) (`YYYY.M.
 
 ## [Unreleased]
 
+## [2026.9.4] - 2026-09-29
+
 ### Added
 
 - `jekyll-theme-nucky/_layouts/labs.html`
