@@ -19,16 +19,30 @@
 # Only the bibliography (and, if a course needs a different style, csl)
 # stays course-local; the filter order and reference-section conventions
 # are shared here.
+#
+# Besides citations, this file also sets up numbering of figures with
+# pandoc-crossref. Only figures with a label are numbered, i.e. the ones
+# the text refers to:
+#
+#   ![Popisok](obrazok.png){#fig:nazov}
+#
+#   ... na obrazku @fig:nazov -> "na obrazku 1" (the number links to it)
+#
+# and the caption is rendered as "Obr. 1: Popisok". The pandoc-crossref
+# settings live in /app/pandoc/crossref.yaml (see 'metadata-files' below).
 
 csl: iso690-numeric-sk.csl
 
 bibliography:
   - /app/pandoc/empty.bib
 
-# Poradie filtrov je dolezite: citeproc musi bezat pred refs.lua,
-# aby uz existoval <div id="refs">, ktory refs.lua upravuje.
+# Poradie filtrov je dolezite: pandoc-crossref musi bezat pred citeproc,
+# inak by citeproc povazoval odkazy @fig:... za citacie; citeproc musi
+# bezat pred refs.lua, aby uz existoval <div id="refs">, ktory refs.lua
+# upravuje.
 filters:
   - alerts.lua
+  - pandoc-crossref
   - citeproc
   - refs.lua
 
@@ -37,3 +51,8 @@ filters:
 metadata:
   link-citations: true
   reference-section-title: "Literatúra"
+
+# nastavenia pandoc-crossref su v samostatnom subore, lebo sablony ako
+# "$$i$$" musi pandoc precitat ako Markdown (vysvetlenie je v subore)
+metadata-files:
+  - /app/pandoc/crossref.yaml

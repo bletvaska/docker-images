@@ -1,0 +1,18 @@
+# pandoc-crossref settings shared by all courses.
+#
+# Loaded from pandoc/defaults/citations.yaml via 'metadata-files'. It has to
+# be a separate metadata file (not the 'metadata' key of the defaults file),
+# because pandoc parses metadata files as Markdown, so "$$i$$" becomes the
+# math element pandoc-crossref substitutes in templates; under the 'metadata'
+# key it would stay a plain string and be printed literally.
+
+# caption of a labelled figure: "Obr. 1: Popisok"
+figureTitle: "Obr."
+titleDelim: ":"
+
+# reference in the text is just the number: "na obrázku @fig:nazov"
+# -> "na obrázku 1", "na obrázkoch [@fig:a; @fig:b]" -> "na obrázkoch 1, 2"
+figPrefixTemplate: "$$i$$"
+
+# the number in the text links to the figure
+linkReferences: true

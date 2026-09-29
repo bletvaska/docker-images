@@ -7,6 +7,21 @@ and this project adheres to [Calendar Versioning](https://calver.org/) (`YYYY.M.
 
 ## [Unreleased]
 
+### Added
+
+- `pandoc/defaults/citations.yaml`, `pandoc/crossref.yaml`
+  - numbering of figures with `pandoc-crossref` for Jekyll pages: figures
+    with a label (`![Popisok](obrazok.png){#fig:nazov}`) get the caption
+    `Obr. N: Popisok` and can be referred to from the text with `@fig:nazov`,
+    which is rendered as just the number linking to the figure
+    (`na obrázku @fig:nazov` -> `na obrázku N`); figures without a label
+    are not numbered
+
+### Changed
+
+- `jekyll-theme-nucky/assets/css/print.css`
+  - left page margin is increased from 15 mm to 20 mm
+
 ## [2026.9.6] - 2026-09-29
 
 ### Changed

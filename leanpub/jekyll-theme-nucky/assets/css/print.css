@@ -5,7 +5,7 @@
 
 @page {
     size: A4;
-    margin: 18mm 15mm;
+    margin: 18mm 15mm 18mm 20mm;   /* top, right, bottom, left */
 
     /* page number; margin boxes are supported by Chromium-based browsers
        (Chrome, Edge) since v131, other browsers ignore them */
