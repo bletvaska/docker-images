@@ -149,3 +149,34 @@ main blockquote footer {
 [data-bs-theme="dark"] main blockquote footer {
     color: #adb5bd;
 }
+
+/* ---------------------------------------------------------------------------
+   Nadpisy jednotlivych krokov v navode ("### Nazov {.step}")
+   Podciarknutie vizualne oddeluje kazdy krok od predchadzajuceho obsahu,
+   pocitadlo pred nazvom navyse ukazuje poradie krokov v ramci stranky.
+   Farby su premenne Bootstrapu, takze funguju aj v tmavom rezime.
+   --------------------------------------------------------------------------- */
+main {
+    counter-reset: step-counter;
+}
+
+main .step {
+    margin-top: 3rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 3px solid var(--bs-link-color);
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: var(--bs-emphasis-color);
+}
+
+main .step::before {
+    counter-increment: step-counter;
+    content: "Krok " counter(step-counter);
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--bs-link-color);
+}

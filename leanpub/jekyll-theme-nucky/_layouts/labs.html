@@ -5,20 +5,50 @@ layout: default
 
 <div class="jumbotron">
     <div class="container">
-        <h1 class="display-3 title">{{ page.title }}</h1>
+        <h1 class="display-3 title">
+        {%- if page.week %}
+            Lab #{{ page.week }}:
+        {% endif %}
+        {{ page.title }}</h1>
         {{ page.subtitle | markdownify }}
     </div>
 </div>
 
 <div class="container">
-{% if page.videos %}
-<h2>Video pre cvičenie</h2>
+{% if site.lecturer and page.todo %}
+<section class="alert alert-info theme-alert-info">
+    <h4 class="alert-heading">
+        <span class="fas fa-clipboard-list" data-aria-hidden="true"></span>
+        Todo
+    </h4>
 
-{% for video in page.videos: %}
-<figure class="video_container embed-responsive embed-responsive-16by9 w-50 d-inline-block">
-    <iframe class="embed-responsive-item" src="{{ video }}" allowfullscreen="true"></iframe>
-</figure>
-{% endfor %}
+    <ul>
+        {% for item in page.todo %}
+        <li>{{ item | markdownify }}</li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+
+
+{% if page.videos %}
+<section class="d-print-none">
+    {% if page.videos.size == 1 %}
+    <h2>Video pre cvičenie</h2>
+    {% else %}
+    <h2>Videá pre cvičenie</h2>
+    {% endif %}
+
+    <div class="row">
+        {% for video in page.videos %}
+        <div class="col-6">
+            <figure class="ratio ratio-16x9">
+                <iframe src="{{ video }}" allowfullscreen="true"></iframe>
+            </figure>
+        </div>
+        {% endfor %}
+    </div>
+</section>
 {% endif %}
 
 {{ content }}

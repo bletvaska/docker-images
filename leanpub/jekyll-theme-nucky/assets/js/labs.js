@@ -5,8 +5,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let step = 1;
 
     document.querySelectorAll('h3.step').forEach(function (stepEl) {
-        stepEl.insertAdjacentHTML('afterbegin', `Krok #${step}: `);
-
         // mark all tasks
         let task = 1;
         let sibling = stepEl.nextElementSibling;

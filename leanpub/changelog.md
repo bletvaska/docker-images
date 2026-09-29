@@ -1,0 +1,50 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Calendar Versioning](https://calver.org/) (`YYYY.M.PATCH`).
+
+## [Unreleased]
+
+### Added
+
+- `jekyll-theme-nucky/_layouts/labs.html`
+  - title is prefixed with `Lab #N:` when the page defines `week`
+  - "Todo" box with items from `page.todo`, shown only in the lecturer build (`site.lecturer`)
+- `jekyll-theme-nucky/assets/css/nucky.css`
+  - styles for step headings (`### Title {.step}`): underline and a CSS counter
+    rendering `Krok N` above the title, colors taken from Bootstrap variables
+    (`--bs-link-color`, `--bs-emphasis-color`), so they work in dark mode too
+- `Dockerfile`
+  - build argument `VERSION` (default `dev`), exposed as `LEANPUB_VERSION`
+    environment variable and `version` label
+- `justfile`
+  - recipe `versions` prints the version of the image
+- `entrypoint.sh`
+  - recipes working with the site (`build`, `clean`, `serve`, `deploy`, `epub`, `pdf`)
+    stop with a readable error when there is no `_config.yml` in the current folder
+
+### Changed
+
+- `jekyll-theme-nucky/_layouts/labs.html`
+  - heading above videos is "Video pre cvičenie" for one video and
+    "Videá pre cvičenie" for more
+  - videos are laid out with Bootstrap 5 classes (`row`, `col-6`, `ratio ratio-16x9`)
+  - the whole video section (including its heading) is hidden when printing (`d-print-none`)
+- `jekyll-theme-nucky/assets/js/labs.js`
+  - step numbers are no longer inserted as `Krok #N:` text, the numbering
+    is done by CSS in `nucky.css`
+
+### Removed
+
+- `Dockerfile`
+  - fixed `LABEL version="2026.09"`, replaced by the `VERSION` build argument
+
+### Fixed
+
+- `jekyll-theme-nucky/_layouts/labs.html`
+  - videos were rendered with Bootstrap 4 classes (`embed-responsive*`),
+    which do not exist in Bootstrap 5, so the embedded players had
+    the default iframe size of 300×150 px
+  - invalid Liquid syntax `{% for video in page.videos: %}`
