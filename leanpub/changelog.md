@@ -7,6 +7,8 @@ and this project adheres to [Calendar Versioning](https://calver.org/) (`YYYY.M.
 
 ## [Unreleased]
 
+## [2026.9.7] - 2026-09-30
+
 ### Added
 
 - `pandoc/defaults/citations.yaml`, `pandoc/crossref.yaml`
