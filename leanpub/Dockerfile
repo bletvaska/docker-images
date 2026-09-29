@@ -3,7 +3,6 @@ FROM debian:trixie-slim
 LABEL maintainer="mirek <mirek@cnl.sk>"
 LABEL title="LeanPub Powered"
 LABEL description="LeanPub heavy powered docker image Courses at Department of Computers and Informatics at Technical University of Košice"
-LABEL version="2026.09"
 
 # pandoc-crossref releases are only published in lockstep with a specific
 # pandoc version, so both are pinned together and installed from upstream
@@ -98,5 +97,13 @@ ADD justfile /app/justfile
 ADD entrypoint.sh /app/entrypoint.sh
 ADD tasks.py /app/tasks.py
 ADD liquid_render.rb /app/liquid_render.rb
+
+# version of the image, shown by `just versions`; a release build passes it
+# explicitly (docker build --build-arg VERSION=2026.9.4 -t ...:2026.9.4 .),
+# a plain `docker build` is marked as "dev". It is declared last so changing
+# it does not invalidate the cached layers above.
+ARG VERSION=dev
+ENV LEANPUB_VERSION=${VERSION}
+LABEL version="${VERSION}"
 
 ENTRYPOINT [ "/app/entrypoint.sh" ]

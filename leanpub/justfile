@@ -5,6 +5,7 @@ default:
 
 # Show versions of the tools baked into this image.
 versions:
+    @echo "leanpub image:   ${LEANPUB_VERSION:-unknown}"
     @echo "just:            $(just --version)"
     @echo "jekyll:          $(jekyll --version)"
     @echo "pandoc:          $(pandoc --version | head -n1)"

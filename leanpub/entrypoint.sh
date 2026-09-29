@@ -31,6 +31,19 @@ main(){
         exit 0
     fi
 
+    # recipes working with the site need a jekyll root (at least _config.yml);
+    # without it jekyll (or tasks.py) dies with an ugly stack trace, so stop
+    # early with a readable message instead
+    case "${1}" in
+        build|clean|serve|deploy|epub|pdf)
+            if [ ! -f _config.yml ]; then
+                echo "Error: the current folder is not a jekyll site root (no _config.yml found)." >&2
+                echo "Run it from the course folder containing _config.yml." >&2
+                exit 1
+            fi
+            ;;
+    esac
+
     # check what to do based on jekyll commands
     # exec replaces this shell with just, so it becomes PID 1 and receives
     # signals (e.g. from `docker stop`) directly instead of relying on a
