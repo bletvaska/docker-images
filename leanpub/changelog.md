@@ -7,6 +7,17 @@ and this project adheres to [Calendar Versioning](https://calver.org/) (`YYYY.M.
 
 ## [Unreleased]
 
+### Changed
+
+- `jekyll-theme-nucky/_layouts/outline.html`
+  - lectures and labs are taken from the collections `site.lectures` and `site.labs`
+    instead of filtering `site.pages` by `layout` and `year`
+  - year in the title is taken from `site.year` instead of `page.year`
+- `jekyll-theme-nucky/_layouts/default.html`
+  - copyright years in the footer are taken from `site.since` (the year of
+    the first run of the course, defaults to `site.year`) and `site.year`
+    instead of the years of all pages with layout `outline`
+
 ## [2026.9.5] - 2026-09-29
 
 ### Changed

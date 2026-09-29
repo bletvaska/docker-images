@@ -2,13 +2,13 @@
 layout: default
 ---
 
-{% assign labs = site.pages | where_exp: "item", "item.layout == 'labs'" | where_exp: "item", "item.year == page.year" | sort: "week" %}
-{% assign lectures = site.pages | where_exp: "item", "item.layout == 'lecture'" | where_exp: "item", "item.year == page.year" | sort: "week" %}
+{% assign labs = site.labs | sort: "week" %}
+{% assign lectures = site.lectures | sort: "week" %}
 
 
 <div class="jumbotron">
     <div class="container">
-        <h1 class="display-3 title">Course Outline {{ page.year }}</h1>
+        <h1 class="display-3 title">Course Outline {{ site.year }}</h1>
     </div>
 </div>
 

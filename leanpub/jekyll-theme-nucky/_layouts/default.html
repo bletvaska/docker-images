@@ -66,12 +66,8 @@
         </div>
     </div>
 
-    {% assign outlines = site.pages | where_exp: "item", "item.layout == 'outline'" | sort: "year" %}
-    {% assign min = outlines | first %}
-    {% assign max = outlines | last %}
-
     <div class="footer-copyright">
-        <p>(c) {{ min.year }} - {{ max.year }} <a href="https://kpi.fei.tuke.sk/">Katedra počítačov a informatiky</a>,
+        <p>(c) {{ site.since | default: site.year }} - {{ site.year }} <a href="https://kpi.fei.tuke.sk/">Katedra počítačov a informatiky</a>,
             <a href="http://www.tuke.sk/">Technická univerzita v Košiciach</a></p>
     </div>
 </footer>
