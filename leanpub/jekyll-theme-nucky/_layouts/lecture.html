@@ -23,11 +23,13 @@ layout: default
     {% include lecturer.intro.html %}
 {% else %}
     {% if page.video %}
-<h2>Záznam z prednášky</h2>
+<section class="d-print-none">
+    <h2>Záznam z prednášky</h2>
 
-<figure class="video_container embed-responsive embed-responsive-16by9">
-    <iframe class="embed-responsive-item" src="{{ page.video }}" allowfullscreen="true"></iframe>
-</figure>
+    <figure class="ratio ratio-16x9">
+        <iframe src="{{ page.video }}" allowfullscreen="true"></iframe>
+    </figure>
+</section>
     {% endif %}
 
 {% endif %}

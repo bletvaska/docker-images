@@ -7,6 +7,24 @@ and this project adheres to [Calendar Versioning](https://calver.org/) (`YYYY.M.
 
 ## [Unreleased]
 
+### Changed
+
+- `jekyll-theme-nucky/_layouts/lecture.html`
+  - lecture recording is embedded with Bootstrap 5 classes (`ratio ratio-16x9`)
+  - the recording section (including its heading) is hidden when printing (`d-print-none`)
+- `jekyll-theme-nucky/_includes/video.html`
+  - video is embedded with Bootstrap 5 classes (`ratio ratio-16x9`)
+  - the video (including its heading) is hidden when printing (`d-print-none`)
+
+### Fixed
+
+- `jekyll-theme-nucky/_layouts/lecture.html`, `jekyll-theme-nucky/_includes/video.html`
+  - videos were rendered with Bootstrap 4 classes (`embed-responsive*`),
+    which do not exist in Bootstrap 5, so the embedded players had
+    the default iframe size of 300×150 px
+- `jekyll-theme-nucky/_includes/video.html`
+  - heading was never shown because of the typo `include.titlet`
+
 ## [2026.9.4] - 2026-09-29
 
 ### Added

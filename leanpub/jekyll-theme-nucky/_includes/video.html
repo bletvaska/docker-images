@@ -1,7 +1,9 @@
-{% if include.title %}
-<h2>{{ include.titlet }}</h2>
-{% endif %}
+<section class="d-print-none">
+    {% if include.title %}
+    <h2>{{ include.title }}</h2>
+    {% endif %}
 
-<figure class="video_container embed-responsive embed-responsive-16by9">
-    <iframe class="embed-responsive-item" src="{{ include.video }}" allowfullscreen="true"></iframe>
-</figure>
+    <figure class="ratio ratio-16x9">
+        <iframe src="{{ include.video }}" allowfullscreen="true"></iframe>
+    </figure>
+</section>
