@@ -9,6 +9,11 @@ and this project adheres to [Calendar Versioning](https://calver.org/) (`YYYY.M.
 
 ### Added
 
+- `jekyll-theme-nucky/_includes/math.html`
+  - math in LaTeX syntax (`$...$`, `$$...$$`) is rendered with
+    [KaTeX](https://katex.org) 0.18.9; `default.html` includes it only on pages
+    containing math
+
 - `justfile` for building and releasing the image: `just build` (image `dev`),
   `just release VERSION` (tags `VERSION`, `YYYY.M`, `YYYY` and `latest`,
   refuses a version missing in the changelog or already on Docker Hub) and
@@ -20,6 +25,17 @@ and this project adheres to [Calendar Versioning](https://calver.org/) (`YYYY.M.
   repository (`justfile`, `entrypoint.sh`, `tasks.py`, `liquid_render.rb`,
   `_config_defaults.yml`, `pandoc/`, `texmf/`), which is copied as a whole
   with `COPY app/ /app/`; the content of the image is unchanged
+
+### Deprecated
+
+- `jekyll-theme-nucky/_includes/mathjax.html` (MathJax 2.7.3, which a page had
+  to include by itself with `{% include mathjax.html %}`) does nothing now and
+  can be removed from the pages
+
+### Fixed
+
+- math on pages without `{% include mathjax.html %}` was shown as raw LaTeX
+  (e.g. `\[ e = w - y \]`)
 
 ## [2026.9.9] - 2026-09-30
 

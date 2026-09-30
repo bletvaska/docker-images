@@ -109,6 +109,10 @@
 
 {% include lightbox.html %}
 
+{% if content contains 'class="math ' %}
+{% include math.html %}
+{% endif %}
+
 {% include google.analytics.html %}
 
 </body>
