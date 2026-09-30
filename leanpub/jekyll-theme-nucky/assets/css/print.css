@@ -142,6 +142,11 @@ img {
     max-width: 100% !important;
 }
 
+/* obrazky s popiskom by na celu sirku zaberali zbytocne vela miesta */
+figure img {
+    max-width: 75% !important;
+}
+
 /* striped rows are drawn with backgrounds, which browsers drop when printing */
 .table,
 .table-striped > tbody > tr:nth-of-type(odd) > * {

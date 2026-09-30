@@ -1,0 +1,111 @@
+{%- comment -%}
+Zvacsenie obrazkov po kliknuti (GLightbox, https://github.com/biati-digital/glightbox).
+
+Obrazky v <figure> su aj s popiskom zarovnane na stred a na stranke sa
+zmensia najviac na polovicu sirky okna (na mobile na sirku textu) a na
+vysku 60 % okna. Obrazky maju biele pozadie, aby
+boli obrazky s priehladnym pozadim citatelne aj v tmavom rezime a v nahlade.
+Ak je obrazok takto zmenseny, kliknutim sa otvori v povodnej velkosti aj
+s popiskom z <figcaption>. Nahlad sa zatvori klavesom ESC, kliknutim na
+obrazok, mimo neho alebo na X.
+
+Pouzitie: {% include lightbox.html %} na konci <body> v layoute.
+{%- endcomment -%}
+
+<style>
+    main figure img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        /* najviac polovica sirky okna (nie bloku, aby obrazky v stlpcoch
+           neboli prilis male), no nikdy nie sirsie ako blok */
+        max-width: min(100%, 50vw);
+        max-height: 60vh;
+        height: auto;
+    }
+
+    /* na uzkych obrazovkach (mobil) by polovica okna bola primalo */
+    @media (max-width: 767.98px) {
+        main figure img {
+            max-width: 100%;
+        }
+    }
+
+    /* biele pozadie pre obrazky s priehladnym pozadim (diagramy), aby boli
+       citatelne v tmavom rezime aj v nahlade s tmavym pozadim */
+    main figure img,
+    .glightbox-container .gslide-image img {
+        background-color: #fff;
+    }
+
+    [data-bs-theme="dark"] main figure img,
+    .glightbox-container .gslide-image img {
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+    }
+
+    main figure figcaption {
+        text-align: center;
+    }
+
+    main figure img.zoomable {
+        cursor: zoom-in;
+    }
+
+    /* sirku pri tlaci urcuje print.css */
+    @media print {
+        main figure img {
+            max-height: none;
+        }
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/glightbox/3.3.1/css/glightbox.min.css"
+      integrity="sha512-T+KoG3fbDoSnlgEXFQqwcTC9AdkFIxhBlmoaFqYaIjq2ShhNwNao9AKaLUPMfwiBPL0ScxAtc+UYbHAgvd+sjQ=="
+      crossorigin="anonymous" referrerpolicy="no-referrer">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/glightbox/3.3.1/js/glightbox.min.js"
+        integrity="sha512-XL54SjceXZFzblziNnaFFaXggzqCuZrFS4loWPpvPJ6Kg0kc2HyL89+cPeH0GMq0sKL2SegzUmA8Lx9a0st2ow=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+// az po 'load', aby boli zname skutocne rozmery obrazkov
+window.addEventListener('load', function () {
+    if (!window.GLightbox) return;
+
+    var elements = [];
+    var lightbox = null;
+
+    document.querySelectorAll('main figure img').forEach(function (img) {
+        // obrazok, ktory sa zmesti na stranku, netreba zvacsovat
+        if (img.naturalWidth <= img.clientWidth && img.naturalHeight <= img.clientHeight) return;
+
+        var caption = img.closest('figure').querySelector('figcaption');
+        var index = elements.length;
+
+        elements.push({
+            href: img.currentSrc || img.src,
+            type: 'image',
+            description: caption ? caption.innerHTML : ''
+        });
+
+        img.classList.add('zoomable');
+        img.addEventListener('click', function () {
+            lightbox.openAt(index);
+        });
+    });
+
+    if (elements.length === 0) return;
+
+    lightbox = GLightbox({
+        elements: elements,
+        zoomable: false,
+        loop: false
+    });
+
+    // kliknutie na zvacseny obrazok nahlad zatvori
+    lightbox.on('slide_after_load', function (data) {
+        var img = data.slideNode.querySelector('img');
+        if (img) img.addEventListener('click', function () { lightbox.close(); });
+    });
+});
+</script>
