@@ -1,17 +1,42 @@
-/* Course CSS for the Bootstrap 5 default layout.
+/* Theme CSS for the Bootstrap 5 default layout.
    Bootstrap 5 dropped .jumbotron and ties list indentation to the root
-   font-size; both are patched here. The footer/alert rules below are
-   carried over unchanged from the old Bootstrap-4-era theme.css —
-   they're plain CSS, not tied to any Bootstrap version. */
+   font-size; both are patched here, together with the sticky footer,
+   the footer and alert styles and their dark mode variants. */
 
 body {
-    font-size: 1.3em;
-    padding-top: 3.5rem;
+    font-size: 1.4rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Sticky footer
+   Body je flex kontajner na celu vysku okna, <main> vyplni volny priestor
+   a odtlaci footer nadol. Footer je tak vzdy na spodku obrazovky pri kratkom
+   obsahu a plynulo sa posunie nizsie pri dlhom obsahu.
+   --------------------------------------------------------------------------- */
+html {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-top: 3.5rem; /* miesto pre .navbar.fixed-top */
 }
 
 main {
-    min-height: 100%;
-    overflow: auto;
+    flex: 1 0 auto;
+}
+
+.footer {
+    flex-shrink: 0;
+}
+
+/* obrazky v texte nesmu byt sirsie ako blok; obrazky v <figure> maju
+   vlastne pravidla v _includes/lightbox.html */
+main img {
+    max-width: 100%;
+    height: auto;
 }
 
 /* Bootstrap 5 removed .jumbotron; restored here */
@@ -30,8 +55,8 @@ main {
 
 /* Bootstrap's list padding is a fixed 2rem tied to the root font-size;
    using em instead keeps it proportional to the local (larger) body text */
-ol,
-ul {
+main ol,
+main ul {
     padding-left: 2em;
 }
 
@@ -40,30 +65,26 @@ ul {
 }
 
 .footer {
+    width: 100%;
     font-size: 1rem;
     background-color: #f5f5f5;
-    margin-top: auto !important;
-    width: 100%;
-    position: relative;
-    height: 250px;
-    margin-top: -250px;
 }
 
 .footer div.container {
-    padding-bottom: 1rem !important;
-    padding-top: 1rem !important;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
 .footer-copyright {
-    background-color: #d5d5d5;
-    text-align: center;
-    padding-bottom: 0.5rem;
     padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    text-align: center;
+    background-color: #d5d5d5;
 }
 
 .footer-copyright p {
-    margin-bottom: auto !important;
-    margin-top: auto !important;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .license-icons img {
@@ -111,6 +132,39 @@ ul {
 .theme-alert-lecturer p:first-of-type {
     color: #f0ad4e;
     margin-bottom: 13px;
+}
+
+/* ---------------------------------------------------------------------------
+   Tmavy rezim
+   Bootstrap 5.3 prepina cez atribut <html data-bs-theme="dark"> a sam
+   upravi telo, karty, alerty atd. Tu dolaďujeme len vlastne prvky, ktore
+   maju natvrdo zadane svetle farby.
+   --------------------------------------------------------------------------- */
+[data-bs-theme="dark"] .jumbotron {
+    background-color: #2b3035;
+}
+
+[data-bs-theme="dark"] .footer {
+    background-color: #2b3035;
+}
+
+[data-bs-theme="dark"] .footer-copyright {
+    background-color: #1b1e21;
+}
+
+[data-bs-theme="dark"] .theme-alert-info,
+[data-bs-theme="dark"] .theme-alert-info p:first-of-type {
+    color: #6edff6;
+}
+
+[data-bs-theme="dark"] .theme-alert-danger,
+[data-bs-theme="dark"] .theme-alert-lecturer {
+    color: #dee2e6;
+}
+
+/* CC/BY/NC/SA su cierne kresby – na tmavom footeri by boli neviditelne */
+[data-bs-theme="dark"] .license-icons img {
+    filter: invert(1);
 }
 
 /* ---------------------------------------------------------------------------

@@ -1,62 +1,81 @@
 <!doctype html>
 <html lang="sk">
 <head>
-    <title>{{ page.title }}</title>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="author" content="mirek (miroslav.binas@tuke.sk)">
 
+    {% include seo.html %}
+
+    {%- assign assets = site.paths.assets -%}
+    {%- unless assets -%}
+      {%- assign assets = site.baseurl | append: "/assets" -%}
+    {%- endunless %}
+
+    <!-- Skorsie nadviazanie spojenia na CDN (rychlejsi first paint) -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
+    {%- assign hljs_ver   = site.highlightjs.version     | default: "11.11.1" -%}
+    {%- assign hljs_light = site.highlightjs.theme_light | default: "github" -%}
+    {%- assign hljs_dark  = site.highlightjs.theme_dark  | default: "github-dark" -%}
+    {%- assign hljs_cdn   = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/" | append: hljs_ver -%}
+
+    <!-- Highlight JS – svetla + (nepovinne) tmava tema, prepina sa podla data-bs-theme -->
+    <link rel="stylesheet" id="hljs-light" href="{{ hljs_cdn }}/styles/{{ hljs_light }}.min.css">
+    {%- if hljs_dark and hljs_dark != "" %}
+    <link rel="stylesheet" id="hljs-dark" disabled href="{{ hljs_cdn }}/styles/{{ hljs_dark }}.min.css">
+    {%- endif %}
+
+    <!-- JS temy (farebny rezim a pod.) – blokujuco, aby neblikalo -->
+    <script src="{{ assets }}/js/nucky.js"></script>
+
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-          rel="stylesheet"
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
           crossorigin="anonymous">
 
-    <!-- Highlight JS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css"
-          rel="stylesheet">
-
     <!-- Font Awesome CSS -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
-          integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
-          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+          integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer">
 
-    <!-- Course CSS: Bootstrap 4 -> 5 patches (jumbotron, list indent) + footer/alert styles -->
-    <link rel="stylesheet"
-          href="{{ site.baseurl }}/assets/css/nucky.css">
+    <!-- CSS temy -->
+    <link rel="stylesheet" href="{{ assets }}/css/nucky.css">
+
+    <!-- CSS kurzu (extra_css v _config.yml, cesty relativne k assets/css) -->
+    {%- for css in site.extra_css %}
+    <link rel="stylesheet" href="{{ assets }}/css/{{ css }}">
+    {%- endfor %}
 
     <!-- Print stylesheet (only applied when printing) -->
-    <link rel="stylesheet" media="print"
-          href="{{ site.baseurl }}/assets/css/print.css">
+    <link rel="stylesheet" media="print" href="{{ assets }}/css/print.css">
 </head>
 
 
-<body data-bs-spy="scroll" data-bs-target="#sidenav" data-bs-offset="50">
+<body>
 
-{% include nav.html %}
+{% include navigation.html %}
 
 <main>
-    <div class="container">
 {{ content }}
-    </div>
 </main>
 
 
 <footer class="footer">
     <div class="container">
         <div class="row">
-            <div class="col-md-8 h-100 align-self-center">
+            <div class="col-md-8 align-self-center">
                 <span class="footer-title">{{ site.title }}</span>
-                <p>{{ site.description | markdownify }}</p>
+                {{ site.description | markdownify }}
             </div>
 
             <div class="col-md-4">
                 <div class="license-icons">
-                    <img src="{{ site.baseurl }}/assets/img/cc.svg" alt="creative commons">
-                    <img src="{{ site.baseurl }}/assets/img/by.svg" alt="by">
-                    <img src="{{ site.baseurl }}/assets/img/nc-eu.svg" alt="nc">
-                    <img src="{{ site.baseurl }}/assets/img/sa.svg" alt="sa">
+                    <img src="{{ assets }}/img/cc.svg" alt="creative commons">
+                    <img src="{{ assets }}/img/by.svg" alt="by">
+                    <img src="{{ assets }}/img/nc-eu.svg" alt="nc">
+                    <img src="{{ assets }}/img/sa.svg" alt="sa">
                 </div>
 
                 <p>
@@ -78,9 +97,9 @@
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
 
-<!-- syntax highlighting -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
+
+<!-- syntax highlighting (spusta sa v nucky.js po DOMContentLoaded) -->
+<script src="{{ hljs_cdn }}/highlight.min.js"></script>
 
 
 {% if jekyll.environment == "development" %}
@@ -88,17 +107,7 @@
 <script src="https://livejs.com/live.js"></script>
 {% endif %}
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('table').forEach(function (t) {
-        t.classList.add('table', 'table-striped');
-    });
-    document.querySelectorAll('img').forEach(function (img) {
-        img.classList.add('img-fluid');
-    });
-});
-</script>
-
+{% include lightbox.html %}
 
 {% include google.analytics.html %}
 

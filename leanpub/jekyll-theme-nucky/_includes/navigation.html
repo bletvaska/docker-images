@@ -1,0 +1,44 @@
+{%- comment -%}
+  Nahradna navigacia temy: nazov kurzu a prepinac farebneho rezimu.
+  Kurz ju nahradi vlastnym suborom _includes/navigation.html (subory kurzu
+  maju prednost pred subormi temy). Prepinac rezimu obsluhuje assets/js/nucky.js
+  cez [data-bs-theme-value] a #theme-icon.
+{%- endcomment -%}
+<nav class="navbar navbar-expand-md fixed-top bg-dark" data-bs-theme="dark">
+  <div class="container-fluid">
+  <a class="navbar-brand" href="{{ site.baseurl }}/">{{ site.title }}</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-main"
+    aria-controls="navbar-main" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbar-main">
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="theme-menu" role="button" data-bs-toggle="dropdown"
+          aria-expanded="false">
+          <span class="fas fa-adjust" id="theme-icon" aria-hidden="true"></span>
+          <span class="d-md-none ms-2">Farebný režim</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="theme-menu">
+          <li>
+            <button type="button" class="dropdown-item" data-bs-theme-value="light">
+              <span class="fas fa-sun fa-fw me-2" aria-hidden="true"></span>Svetlý
+            </button>
+          </li>
+          <li>
+            <button type="button" class="dropdown-item" data-bs-theme-value="dark">
+              <span class="fas fa-moon fa-fw me-2" aria-hidden="true"></span>Tmavý
+            </button>
+          </li>
+          <li>
+            <button type="button" class="dropdown-item" data-bs-theme-value="auto">
+              <span class="fas fa-adjust fa-fw me-2" aria-hidden="true"></span>Podľa systému
+            </button>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  </div>
+</nav>
