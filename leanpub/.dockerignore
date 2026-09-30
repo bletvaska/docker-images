@@ -4,9 +4,11 @@
 .dockerignore
 readme.md
 todo.md
+changelog.md
+justfile
 
 # sources of the Blitz eBook framework; the image only uses the generated
-# pandoc/styles/blitz.css
+# app/pandoc/styles/blitz.css
 Blitz-v.1.5.2
 
 # LaTeX build artifacts, backup copies and experiments
@@ -14,6 +16,6 @@ Blitz-v.1.5.2
 **/*.log
 **/*.fls
 **/*.fdb_latexmk
-pandoc/templates/*.pdf
+app/pandoc/templates/*.pdf
 **/* copy.*
-pandoc/templates/pdf-lectures.cleaner.tex
+app/pandoc/templates/pdf-lectures.cleaner.tex

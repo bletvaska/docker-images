@@ -74,9 +74,8 @@ RUN python3 -m venv /opt/venv \
     && rm /tmp/requirements.txt
 ENV PATH="/opt/venv/bin:${PATH}"
 
-# experimental - texlive support
+# experimental - texlive support (texmf is part of app/, copied below)
 ENV TEXMFHOME=/app/texmf
-COPY texmf/ /app/texmf/
 
 # environment variables
 ENV JEKYLL_ENV=development
@@ -90,13 +89,9 @@ WORKDIR /courseware
 EXPOSE 4000
 
 # everything the image itself contributes (as opposed to the courseware
-# mounted at /courseware) lives together under /app
-ADD pandoc /app/pandoc
-ADD _config_defaults.yml /app/_config_defaults.yml
-ADD justfile /app/justfile
-ADD entrypoint.sh /app/entrypoint.sh
-ADD tasks.py /app/tasks.py
-ADD liquid_render.rb /app/liquid_render.rb
+# mounted at /courseware) lives together under /app; the app/ folder of
+# this repository is its exact copy
+COPY app/ /app/
 
 # version of the image, shown by `just versions`; a release build passes it
 # explicitly (docker build --build-arg VERSION=2026.9.4 -t ...:2026.9.4 .),
