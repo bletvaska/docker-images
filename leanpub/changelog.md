@@ -7,6 +7,8 @@ and this project adheres to [Calendar Versioning](https://calver.org/) (`YYYY.M.
 
 ## [Unreleased]
 
+## [2026.9.8] - 2026-09-30
+
 ### Added
 
 - `jekyll-theme-nucky/_includes/seo.html` (taken from the IoT course)
