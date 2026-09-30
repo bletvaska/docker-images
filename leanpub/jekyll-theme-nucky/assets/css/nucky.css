@@ -12,11 +12,9 @@ body {
    Body je flex kontajner na celu vysku okna, <main> vyplni volny priestor
    a odtlaci footer nadol. Footer je tak vzdy na spodku obrazovky pri kratkom
    obsahu a plynulo sa posunie nizsie pri dlhom obsahu.
+   Na <html> nesmie byt height: 100% - offsetHeight dokumentu by bol vyska
+   okna a tocbot by si myslel, ze je stranka stale posunuta na koniec.
    --------------------------------------------------------------------------- */
-html {
-    height: 100%;
-}
-
 body {
     display: flex;
     flex-direction: column;

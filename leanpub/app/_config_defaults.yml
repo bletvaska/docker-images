@@ -10,6 +10,8 @@ plugins:
 
 pandoc:
     extensions:
+        # identifiers of headings without diacritics (Hysterézia -> hysterezia)
+        - from: markdown+ascii_identifiers
         - mathjax
         - defaults: citations
         - bibliography: references.bib

@@ -21,6 +21,11 @@ and this project adheres to [Calendar Versioning](https://calver.org/) (`YYYY.M.
 
 ### Changed
 
+- identifiers of headings are generated without diacritics (Pandoc extension
+  `ascii_identifiers` in `_config_defaults.yml`), e.g. `## Hysterézia` gets
+  `id="hysterezia"` instead of `id="hysterézia"`; links to headings with
+  diacritics in the anchor (`#hysterézia`) have to be rewritten
+
 - files copied into `/app` in the image are moved to the `app/` folder of the
   repository (`justfile`, `entrypoint.sh`, `tasks.py`, `liquid_render.rb`,
   `_config_defaults.yml`, `pandoc/`, `texmf/`), which is copied as a whole
@@ -36,6 +41,12 @@ and this project adheres to [Calendar Versioning](https://calver.org/) (`YYYY.M.
 
 - math on pages without `{% include mathjax.html %}` was shown as raw LaTeX
   (e.g. `\[ e = w - y \]`)
+
+- the table of contents lost or froze its highlighting of the current section
+  after the URL got a `#heading` (a click in the table of contents); `nucky.css`
+  set `html { height: 100% }`, so tocbot considered the page always scrolled to
+  the bottom and highlighted the heading from the URL, which it does not find
+  for headings with diacritics (`#hyster%C3%A9zia`)
 
 ## [2026.9.9] - 2026-09-30
 
