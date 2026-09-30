@@ -7,6 +7,20 @@ and this project adheres to [Calendar Versioning](https://calver.org/) (`YYYY.M.
 
 ## [Unreleased]
 
+### Added
+
+- `justfile` for building and releasing the image: `just build` (image `dev`),
+  `just release VERSION` (tags `VERSION`, `YYYY.M`, `YYYY` and `latest`,
+  refuses a version missing in the changelog or already on Docker Hub) and
+  `just push VERSION` (pushes the four tags if they point to the same image)
+
+### Changed
+
+- files copied into `/app` in the image are moved to the `app/` folder of the
+  repository (`justfile`, `entrypoint.sh`, `tasks.py`, `liquid_render.rb`,
+  `_config_defaults.yml`, `pandoc/`, `texmf/`), which is copied as a whole
+  with `COPY app/ /app/`; the content of the image is unchanged
+
 ## [2026.9.9] - 2026-09-30
 
 ### Added

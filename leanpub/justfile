@@ -1,0 +1,60 @@
+# Zostavenie a vydanie obrazu bletvaska/leanpub.
+#
+# Prikazy pre pracu s kurzom v kontajneri su v app/justfile (v obraze
+# /app/justfile), tento subor sa do obrazu nekopiruje.
+
+image := "bletvaska/leanpub"
+
+default:
+    @just --list
+
+# Zostavi vyvojovy obraz (znacka dev, verzia dev).
+build:
+    docker build -t {{ image }}:dev .
+
+# Zostavi obraz vo verzii VERSION (napr. 2026.9.10) so znackami VERSION, YYYY.M, YYYY a latest.
+release version:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    version="{{ version }}"
+    if [[ ! "$version" =~ ^[0-9]{4}\.[0-9]{1,2}\.[0-9]+$ ]]; then
+        echo "Error: version must be in the form YYYY.M.PATCH, e.g. 2026.9.10" >&2
+        exit 1
+    fi
+    if ! grep -q "^## \[$version\]" changelog.md; then
+        echo "Error: changelog.md has no section '## [$version]'" >&2
+        exit 1
+    fi
+    # vydana verzia sa uz nesmie zmenit (novy build by mal iny digest)
+    if docker buildx imagetools inspect "{{ image }}:$version" >/dev/null 2>&1; then
+        echo "Error: {{ image }}:$version is already on Docker Hub, use a new version" >&2
+        exit 1
+    fi
+    month="${version%.*}"
+    year="${version%%.*}"
+    docker build --build-arg VERSION="$version" \
+        -t "{{ image }}:$version" \
+        -t "{{ image }}:$month" \
+        -t "{{ image }}:$year" \
+        -t "{{ image }}:latest" \
+        .
+
+# Pushne obraz vo verzii VERSION so znackami VERSION, YYYY.M, YYYY a latest na Docker Hub.
+push version:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    version="{{ version }}"
+    month="${version%.*}"
+    year="${version%%.*}"
+    tags=("$version" "$month" "$year" latest)
+    # vsetky znacky musia ukazovat na ten isty obraz, aby sa nepushlo nieco ine
+    id=$(docker image inspect --format '{{{{.Id}}' "{{ image }}:$version")
+    for tag in "${tags[@]}"; do
+        if [ "$(docker image inspect --format '{{{{.Id}}' "{{ image }}:$tag")" != "$id" ]; then
+            echo "Error: {{ image }}:$tag is not the same image as {{ image }}:$version, run 'just release $version' first" >&2
+            exit 1
+        fi
+    done
+    for tag in "${tags[@]}"; do
+        docker push "{{ image }}:$tag"
+    done
