@@ -15,6 +15,10 @@ layout: default
 </div>
 
 <div class="container">
+<div class="row">
+{% include toc.html headings="h2, h3" ignore=".task" %}
+
+<div class="col-xl toc-content">
 {% if site.lecturer and page.todo %}
 <section class="alert alert-info theme-alert-info">
     <h4 class="alert-heading">
@@ -51,8 +55,11 @@ layout: default
 </section>
 {% endif %}
 
+<div id="page-content">
 {{ content }}
+</div>
+</div>
+</div>
 </div>
 
 <script src="{{ site.baseurl }}/assets/js/labs.js"></script>
-

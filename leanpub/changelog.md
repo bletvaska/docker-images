@@ -7,6 +7,29 @@ and this project adheres to [Calendar Versioning](https://calver.org/) (`YYYY.M.
 
 ## [Unreleased]
 
+### Added
+
+- `jekyll-theme-nucky/_includes/toc.html`
+  - table of contents of the page ([tocbot](https://tscanlin.github.io/tocbot/) 4.36.8)
+    in a panel left of the text, which stays in place while scrolling on wide
+    screens (from 1200 px) and slides in with the "Obsah" button on narrower
+    ones; the section being read is highlighted, steps (`.step`) are numbered
+    like in the text; hidden when printing, on pages with less than 2 headings
+    and on pages with `toc: false` in the front matter
+- `jekyll-theme-nucky/_layouts/labs.html`, `jekyll-theme-nucky/_layouts/lecture.html`
+  - table of contents with `h2` and `h3` headings without tasks (`.task`) in labs
+    and with `h2` to `h4` headings in lectures
+
+### Changed
+
+- `jekyll-theme-nucky/_layouts/lecture.html`
+  - videos of a lecture are listed in `videos` (like in a lab) instead of
+    a single `video`, which is not supported anymore, and they are laid out
+    in two columns like the videos of a lab, instead of one video over
+    the full width
+  - heading is "Video k prednáške" for one video and "Videá k prednáške"
+    for more, instead of "Záznam z prednášky"
+
 ## [2026.9.8] - 2026-09-30
 
 ### Added

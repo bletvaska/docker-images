@@ -19,21 +19,39 @@ layout: default
 
 
 <div class="container">
+<div class="row">
+{% include toc.html headings="h2, h3, h4" %}
+
+<div class="col-xl toc-content">
 {% if site.lecturer %}
     {% include lecturer.intro.html %}
 {% else %}
-    {% if page.video %}
+    {% if page.videos.size > 0 %}
 <section class="d-print-none">
-    <h2>Záznam z prednášky</h2>
+    {% if page.videos.size == 1 %}
+    <h2>Video k prednáške</h2>
+    {% else %}
+    <h2>Videá k prednáške</h2>
+    {% endif %}
 
-    <figure class="ratio ratio-16x9">
-        <iframe src="{{ page.video }}" allowfullscreen="true"></iframe>
-    </figure>
+    <div class="row">
+        {% for video in page.videos %}
+        <div class="col-6">
+            <figure class="ratio ratio-16x9">
+                <iframe src="{{ video }}" allowfullscreen="true"></iframe>
+            </figure>
+        </div>
+        {% endfor %}
+    </div>
 </section>
     {% endif %}
 
 {% endif %}
 
 
+<div id="page-content">
 {{ content }}
+</div>
+</div>
+</div>
 </div>
