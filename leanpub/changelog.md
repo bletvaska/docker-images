@@ -7,6 +7,47 @@ and this project adheres to [Calendar Versioning](https://calver.org/) (`YYYY.M.
 
 ## [Unreleased]
 
+## [2026.10.1] - 2026-10-04
+
+### Added
+
+- `jekyll-theme-nucky/_includes/mermaid.html`
+  - diagrams written as ```` ```mermaid ```` code blocks are rendered with
+    [Mermaid](https://mermaid.js.org) 11.15.0; the theme of the diagrams
+    follows the light / dark mode and they are redrawn when it is switched;
+    `default.html` includes it only on pages containing a diagram
+- `jekyll-theme-nucky/_includes/lightbox.html`
+  - classes `.wide-100` and `.wide-75` (`![popis](obrazok.svg){.wide-100}`)
+    show an image in `<figure>` over the full width of the text, resp. at 75 %
+    of it, without the limit of half of the window width and 60 % of its height
+
+### Changed
+
+- `app/pandoc/crossref.yaml`
+  - a figure made from a div (`::: {#fig:nazov}` ... `:::`), e.g. around
+    a Mermaid diagram, gets the caption `Obr. N: Popisok` like an image,
+    without the period pandoc-crossref adds by default
+- `jekyll-theme-nucky/assets/css/nucky.css`
+  - Mermaid diagrams in a numbered figure are centered like images
+  - headings of the alert blocks (`[lecturer]`, `[comment]`, `[warning]` ...)
+    are semibold
+- `jekyll-theme-nucky/_includes/lightbox.html`
+  - SVG images can always be zoomed (vector images stay sharp, and an SVG
+    without `width` and `height` has no real natural size) and in the preview
+    they are stretched to the size of the window instead of their natural size
+
+### Fixed
+
+- `jekyll-theme-nucky/assets/css/print.css`
+  - labels of pins (`.pin`, white text on a coloured background) disappeared
+    when printing outside of alert blocks, because browsers drop background
+    colours; they keep their colours now (`print-color-adjust: exact`)
+- `app/pandoc/defaults/citations.yaml`
+  - citations (`@kluc`) and references to figures (`@fig:...`) in alert blocks
+    (`[comment]`, `[warning]` ...) were not processed, because `alerts.lua`
+    turned the content of a block into HTML before `pandoc-crossref` and
+    `citeproc` ran; `alerts.lua` runs after them now
+
 ## [2026.9.10] - 2026-09-30
 
 ### Added

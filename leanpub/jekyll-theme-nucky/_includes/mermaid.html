@@ -1,0 +1,46 @@
+{%- comment -%}
+Vykreslenie diagramov v syntaxi Mermaid (https://mermaid.js.org).
+
+Pandoc zmeni blok ```mermaid na <pre class="mermaid"><code>...</code></pre>;
+tu sa tieto elementy nahradia za <div class="mermaid"> a vykreslia. Tema
+diagramov sa riadi podla data-bs-theme a po prepnuti rezimu sa prekreslia.
+Vklada sa v _layouts/default.html len na strankach, ktore diagram obsahuju.
+{%- endcomment -%}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.15.0/mermaid.min.js"
+        integrity="sha512-HH52omhHpZF6RfVnGiQwYgYm4H/ya2xsZYLl5xJ4+tLfX+rN4+8zF7V/H/KLeicPrKZYi1g6iBmVkk2AhXTGlg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // vykreslit len raz, aj keby bol include na stranke viackrat
+    if (!window.mermaid || window.nuckyMermaidRendered) return;
+    window.nuckyMermaidRendered = true;
+
+    // zdrojovy text sa berie cez textContent, takze nevadi, ze blok uz
+    // prefarbil highlight.js (nucky.js); uchova sa pre neskorsie prekreslenie
+    var diagrams = [];
+    document.querySelectorAll('pre.mermaid').forEach(function (pre) {
+        var div = document.createElement('div');
+        div.className = 'mermaid';
+        div.dataset.source = pre.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+    });
+
+    function render() {
+        var dark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+        mermaid.initialize({ startOnLoad: false, theme: dark ? 'dark' : 'default' });
+        diagrams.forEach(function (div) {
+            div.removeAttribute('data-processed');
+            div.textContent = div.dataset.source;
+        });
+        mermaid.run({ nodes: diagrams });
+    }
+
+    render();
+
+    // prepnutie svetleho / tmaveho rezimu (nucky.js meni data-bs-theme)
+    new MutationObserver(render).observe(document.documentElement,
+        { attributes: true, attributeFilter: ['data-bs-theme'] });
+});
+</script>

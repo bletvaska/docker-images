@@ -37,13 +37,14 @@ bibliography:
   - /app/pandoc/empty.bib
 
 # Poradie filtrov je dolezite: pandoc-crossref musi bezat pred citeproc,
-# inak by citeproc povazoval odkazy @fig:... za citacie; citeproc musi
-# bezat pred refs.lua, aby uz existoval <div id="refs">, ktory refs.lua
-# upravuje.
+# inak by citeproc povazoval odkazy @fig:... za citacie; alerts.lua musi
+# bezat az po nich, lebo obsah bloku prevadza na hotove HTML a odkazy
+# a citacie v poznamkach by inak zostali nespracovane; citeproc musi bezat
+# pred refs.lua, aby uz existoval <div id="refs">, ktory refs.lua upravuje.
 filters:
-  - alerts.lua
   - pandoc-crossref
   - citeproc
+  - alerts.lua
   - refs.lua
 
 # link-citations a reference-section-title su METADATA dokumentu,

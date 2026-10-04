@@ -113,6 +113,10 @@
 {% include math.html %}
 {% endif %}
 
+{% if content contains 'class="mermaid"' %}
+{% include mermaid.html %}
+{% endif %}
+
 {% include google.analytics.html %}
 
 </body>

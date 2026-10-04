@@ -132,6 +132,13 @@ main ul {
     margin-bottom: 13px;
 }
 
+/* nadpis bloku ([lecturer], [comment], [warning] ...) z filtra alerts.lua;
+   pandoc z neho urobi prvy odsek bloku (trieda alert-heading sa strati) */
+.alert > p:first-child,
+.alert .alert-heading {
+    font-weight: 600;
+}
+
 /* ---------------------------------------------------------------------------
    Tmavy rezim
    Bootstrap 5.3 prepina cez atribut <html data-bs-theme="dark"> a sam
@@ -231,4 +238,12 @@ main .step::before {
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--bs-link-color);
+}
+
+/* diagram v Mermaide v ocislovanom obrazku (::: {#fig:nazov} ... :::) je na
+   stred rovnako ako obrazky a ich popisky */
+main figure .mermaid svg {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }

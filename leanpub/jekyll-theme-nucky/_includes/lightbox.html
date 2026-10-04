@@ -6,7 +6,9 @@ zmensia najviac na polovicu sirky okna (na mobile na sirku textu) a na
 vysku 60 % okna. Obrazky maju biele pozadie, aby
 boli obrazky s priehladnym pozadim citatelne aj v tmavom rezime a v nahlade.
 Ak je obrazok takto zmenseny, kliknutim sa otvori v povodnej velkosti aj
-s popiskom z <figcaption>. Nahlad sa zatvori klavesom ESC, kliknutim na
+s popiskom z <figcaption>. SVG obrazok sa da zvacsit vzdy a v nahlade sa
+roztiahne na velkost okna. Triedy .wide-100 a .wide-75 ({.wide-100} za
+obrazkom v Markdowne) zobrazia obrazok na celu sirku textu, resp. na 75 %. Nahlad sa zatvori klavesom ESC, kliknutim na
 obrazok, mimo neho alebo na X.
 
 Pouzitie: {% include lightbox.html %} na konci <body> v layoute.
@@ -24,9 +26,29 @@ Pouzitie: {% include lightbox.html %} na konci <body> v layoute.
         height: auto;
     }
 
+    /* siroke obrazky (napr. pinout): ![popis](obrazok.svg){.wide-100} zaberie
+       celu sirku textu, {.wide-75} 75 % sirky textu; vyskou okna nie su
+       obmedzene */
+    main figure img.wide-100,
+    main figure.wide-100 img {
+        width: 100%;
+        max-width: 100%;
+        max-height: none;
+    }
+
+    main figure img.wide-75,
+    main figure.wide-75 img {
+        width: 75%;
+        max-width: 75%;
+        max-height: none;
+    }
+
     /* na uzkych obrazovkach (mobil) by polovica okna bola primalo */
     @media (max-width: 767.98px) {
-        main figure img {
+        main figure img,
+        main figure img.wide-75,
+        main figure.wide-75 img {
+            width: auto;
             max-width: 100%;
         }
     }
@@ -52,6 +74,15 @@ Pouzitie: {% include lightbox.html %} na konci <body> v layoute.
         cursor: zoom-in;
     }
 
+    /* SVG v nahlade: 95 % sirky okna, najviac 80 % vysky (zvysok je pre
+       popisok); --svg-ratio nastavuje skript nizsie */
+    .glightbox-container .gslide-image img.svg {
+        width: min(95vw, calc(80vh * var(--svg-ratio, 1.5))) !important;
+        height: auto !important;
+        max-width: none !important;
+        max-height: none !important;
+    }
+
     /* sirku pri tlaci urcuje print.css */
     @media print {
         main figure img {
@@ -75,15 +106,27 @@ window.addEventListener('load', function () {
     var elements = [];
     var lightbox = null;
 
+    // pomer stran SVG obrazkov podla adresy, aby sa dali v nahlade roztiahnut
+    var svgRatios = {};
+
     document.querySelectorAll('main figure img').forEach(function (img) {
+        var src = img.currentSrc || img.src;
+        // SVG je vektor, zvacsit ho ma zmysel vzdy (a SVG bez width/height
+        // atributov ani nema skutocnu prirodzenu velkost)
+        var isSvg = /\.svg([?#].*)?$/i.test(src);
+
         // obrazok, ktory sa zmesti na stranku, netreba zvacsovat
-        if (img.naturalWidth <= img.clientWidth && img.naturalHeight <= img.clientHeight) return;
+        if (!isSvg && img.naturalWidth <= img.clientWidth && img.naturalHeight <= img.clientHeight) return;
 
         var caption = img.closest('figure').querySelector('figcaption');
         var index = elements.length;
 
+        if (isSvg && img.naturalWidth && img.naturalHeight) {
+            svgRatios[src] = img.naturalWidth / img.naturalHeight;
+        }
+
         elements.push({
-            href: img.currentSrc || img.src,
+            href: src,
             type: 'image',
             description: caption ? caption.innerHTML : ''
         });
@@ -102,10 +145,23 @@ window.addEventListener('load', function () {
         loop: false
     });
 
-    // kliknutie na zvacseny obrazok nahlad zatvori
     lightbox.on('slide_after_load', function (data) {
         var img = data.slideNode.querySelector('img');
-        if (img) img.addEventListener('click', function () { lightbox.close(); });
+        if (!img) return;
+
+        // SVG sa v nahlade roztiahne na velkost okna, nie na svoju prirodzenu
+        // velkost; rozmery urcuje CSS (.gslide-image img.svg), lebo GLightbox
+        // atribut style obrazka pri kazdom prepocte prepise, a pomer stran
+        // je preto ulozeny na slide, ktory GLightbox nemeni
+        var ratio = svgRatios[img.currentSrc || img.src];
+        if (ratio) {
+            data.slideNode.style.setProperty('--svg-ratio', ratio);
+            img.classList.add('svg');
+            lightbox.resize();
+        }
+
+        // kliknutie na zvacseny obrazok nahlad zatvori
+        img.addEventListener('click', function () { lightbox.close(); });
     });
 });
 </script>

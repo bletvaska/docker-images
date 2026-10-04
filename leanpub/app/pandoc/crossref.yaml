@@ -16,3 +16,9 @@ figPrefixTemplate: "$$i$$"
 
 # the number in the text links to the figure
 linkReferences: true
+
+# caption of a figure made from a div (::: {#fig:nazov} ... :::), e.g. around
+# a Mermaid diagram: the same "Obr. 1: Popisok" as for images, without the
+# period pandoc-crossref adds by default
+ccsTemplate: ""
+subfigureTemplate: "$$figureTitle$$ $$i$$$$titleDelim$$ $$t$$"
