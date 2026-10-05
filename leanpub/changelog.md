@@ -7,6 +7,15 @@ and this project adheres to [Calendar Versioning](https://calver.org/) (`YYYY.M.
 
 ## [Unreleased]
 
+## [2026.10.2] - 2026-10-05
+
+### Changed
+
+- `jekyll-theme-nucky/_layouts/problemset.html`
+  - the assignment of a problem set shows the table of contents in the side
+    panel (headings `h2` and `h3`) like labs and lectures; it can be turned
+    off in the front matter with `toc: false`
+
 ## [2026.10.1] - 2026-10-04
 
 ### Added
