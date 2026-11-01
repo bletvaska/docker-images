@@ -5,7 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Calendar Versioning](https://calver.org/) (`YYYY.M.PATCH`).
 
-## [Unreleased]
+## [2026.11.1] - 2026-11-01
+
+### Changed
+
+- `jekyll-theme-nucky/_layouts/page.html`
+  - pages show the table of contents in the side panel (headings `h2` and
+    `h3`) like labs, lectures and problem sets; it can be turned off in the
+    front matter with `toc: false`
+- `jekyll-theme-nucky/assets/css/nucky.css`
+  - inline `code` has dark bold text on a light background with a thin border;
+    code blocks are not affected and code in a link keeps the color of the
+    link
 
 ## [2026.10.2] - 2026-10-05
 
