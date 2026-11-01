@@ -42,5 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // prepnutie svetleho / tmaveho rezimu (nucky.js meni data-bs-theme)
     new MutationObserver(render).observe(document.documentElement,
         { attributes: true, attributeFilter: ['data-bs-theme'] });
+
+    // zvacsenie po kliknuti zabezpecuje lightbox.html
 });
 </script>

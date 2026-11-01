@@ -264,3 +264,35 @@ main figure .mermaid svg {
 a > code {
     color: inherit;
 }
+
+/* diagram v Mermaide sa po kliknuti zvacsi v nahlade (_includes/mermaid.html) */
+main div.mermaid svg {
+    cursor: zoom-in;
+}
+
+.mermaid-zoom {
+    padding: 1rem;
+    background-color: var(--bs-body-bg);
+}
+
+.mermaid-zoom svg {
+    display: block;
+    width: 100%;
+    max-width: none !important;
+    height: auto;
+    max-height: 80vh;
+}
+
+/* pri jedinom obrazku alebo diagrame nie je kam prechadzat */
+.glightbox-container:has(.gslide:only-child) .gprev,
+.glightbox-container:has(.gslide:only-child) .gnext {
+    display: none;
+}
+
+/* popisok diagramu ma sirku nahladu */
+.gslide:has(.mermaid-zoom) .gslide-description {
+    width: 96vw;
+    max-width: 96vw !important;
+    margin: 0 auto;
+    flex: none;
+}

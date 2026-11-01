@@ -101,10 +101,8 @@ Pouzitie: {% include lightbox.html %} na konci <body> v layoute.
 <script>
 // az po 'load', aby boli zname skutocne rozmery obrazkov
 window.addEventListener('load', function () {
-    if (!window.GLightbox) return;
-
-    var elements = [];
-    var lightbox = null;
+    var main = document.querySelector('main');
+    if (!window.GLightbox || !main) return;
 
     // pomer stran SVG obrazkov podla adresy, aby sa dali v nahlade roztiahnut
     var svgRatios = {};
@@ -118,50 +116,83 @@ window.addEventListener('load', function () {
         // obrazok, ktory sa zmesti na stranku, netreba zvacsovat
         if (!isSvg && img.naturalWidth <= img.clientWidth && img.naturalHeight <= img.clientHeight) return;
 
-        var caption = img.closest('figure').querySelector('figcaption');
-        var index = elements.length;
-
         if (isSvg && img.naturalWidth && img.naturalHeight) {
             svgRatios[src] = img.naturalWidth / img.naturalHeight;
         }
 
-        elements.push({
-            href: src,
-            type: 'image',
-            description: caption ? caption.innerHTML : ''
-        });
-
         img.classList.add('zoomable');
-        img.addEventListener('click', function () {
-            lightbox.openAt(index);
+    });
+
+    // obrazky a diagramy v poradi na stranke; zoznam sa zostavuje az pri
+    // kliknuti, lebo Mermaid kresli diagramy asynchronne a prekresluje ich
+    // pri zmene rezimu; diagram sa vklada ako kopia <svg>, nie <img>, lebo
+    // popisy v <foreignObject> by sa v obrazku nevykreslili
+    function collect() {
+        var gallery = { nodes: [], elements: [] };
+
+        main.querySelectorAll('figure img.zoomable, div.mermaid').forEach(function (node) {
+            var figure = node.closest('figure');
+            var caption = figure && figure.querySelector('figcaption');
+            var description = caption ? caption.innerHTML : '';
+
+            if (node.matches('img')) {
+                gallery.elements.push({
+                    href: node.currentSrc || node.src,
+                    type: 'image',
+                    description: description
+                });
+            } else {
+                var svg = node.querySelector('svg');
+                if (!svg) return;
+                gallery.elements.push({
+                    content: '<div class="mermaid-zoom">' + svg.outerHTML + '</div>',
+                    width: '96vw',
+                    height: 'auto',
+                    description: description
+                });
+            }
+
+            gallery.nodes.push(node);
         });
-    });
 
-    if (elements.length === 0) return;
+        return gallery;
+    }
 
-    lightbox = GLightbox({
-        elements: elements,
-        zoomable: false,
-        loop: false
-    });
+    main.addEventListener('click', function (event) {
+        var node = event.target.closest('img.zoomable, div.mermaid');
+        if (!node) return;
 
-    lightbox.on('slide_after_load', function (data) {
-        var img = data.slideNode.querySelector('img');
-        if (!img) return;
+        var gallery = collect();
+        var index = gallery.nodes.indexOf(node);
+        if (index === -1) return;
 
-        // SVG sa v nahlade roztiahne na velkost okna, nie na svoju prirodzenu
-        // velkost; rozmery urcuje CSS (.gslide-image img.svg), lebo GLightbox
-        // atribut style obrazka pri kazdom prepocte prepise, a pomer stran
-        // je preto ulozeny na slide, ktory GLightbox nemeni
-        var ratio = svgRatios[img.currentSrc || img.src];
-        if (ratio) {
-            data.slideNode.style.setProperty('--svg-ratio', ratio);
-            img.classList.add('svg');
-            lightbox.resize();
-        }
+        var lightbox = GLightbox({
+            elements: gallery.elements,
+            zoomable: false,
+            loop: false
+        });
 
-        // kliknutie na zvacseny obrazok nahlad zatvori
-        img.addEventListener('click', function () { lightbox.close(); });
+        lightbox.on('slide_after_load', function (data) {
+            var img = data.slideNode.querySelector('img');
+            if (!img) return;
+
+            // SVG sa v nahlade roztiahne na velkost okna, nie na svoju prirodzenu
+            // velkost; rozmery urcuje CSS (.gslide-image img.svg), lebo GLightbox
+            // atribut style obrazka pri kazdom prepocte prepise, a pomer stran
+            // je preto ulozeny na slide, ktory GLightbox nemeni
+            var ratio = svgRatios[img.currentSrc || img.src];
+            if (ratio) {
+                data.slideNode.style.setProperty('--svg-ratio', ratio);
+                img.classList.add('svg');
+                lightbox.resize();
+            }
+
+            // kliknutie na zvacseny obrazok nahlad zatvori
+            img.addEventListener('click', function () { lightbox.close(); });
+        });
+
+        lightbox.on('close', function () { lightbox.destroy(); });
+        lightbox.openAt(index);
     });
 });
 </script>

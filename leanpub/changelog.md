@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Calendar Versioning](https://calver.org/) (`YYYY.M.PATCH`).
 
+## [2026.11.2] - 2026-11-01
+
+### Added
+
+- `jekyll-theme-nucky/_includes/lightbox.html`
+  - Mermaid diagrams open in the lightbox after a click, with the caption of
+    their figure, in one gallery with the images of the page; it works also
+    after a diagram is redrawn
+- `jekyll-theme-nucky/assets/css/nucky.css`
+  - `zoom-in` cursor over Mermaid diagrams and the style of their preview
+  - no arrows in the lightbox with a single image or diagram
+
 ## [2026.11.1] - 2026-11-01
 
 ### Changed
